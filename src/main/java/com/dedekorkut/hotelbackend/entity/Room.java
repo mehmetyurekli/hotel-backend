@@ -74,4 +74,8 @@ public class Room {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

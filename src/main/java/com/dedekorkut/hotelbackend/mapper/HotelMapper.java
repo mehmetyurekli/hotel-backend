@@ -11,6 +11,7 @@ public class HotelMapper {
                 .name(entity.getName())
                 .city(entity.getCity())
                 .address(entity.getAddress())
+                .rating(entity.getRating())
                 .build();
 
     }
@@ -21,6 +22,7 @@ public class HotelMapper {
                 .name(dto.getName())
                 .city(dto.getCity())
                 .address(dto.getAddress())
+                .rating(dto.getRating())
                 .build();
 
     }

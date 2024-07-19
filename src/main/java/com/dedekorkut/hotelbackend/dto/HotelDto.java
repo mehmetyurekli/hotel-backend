@@ -9,14 +9,16 @@ public class HotelDto {
     private String name;
     private String city;
     private String address;
+    private Double rating;
 
     public HotelDto(){}
 
-    public HotelDto(Long id, String name, String city, String address) {
+    public HotelDto(Long id, String name, String city, String address, Double rating) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.address = address;
+        this.rating = rating;
     }
 
     public Long getId() {
@@ -55,4 +57,11 @@ public class HotelDto {
         this.id = id;
     }
 
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
 }

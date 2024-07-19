@@ -1,6 +1,5 @@
 package com.dedekorkut.hotelbackend.dto;
 
-import com.dedekorkut.hotelbackend.entity.Hotel;
 import lombok.Builder;
 
 @Builder
@@ -61,4 +60,9 @@ public class RoomDto {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 }

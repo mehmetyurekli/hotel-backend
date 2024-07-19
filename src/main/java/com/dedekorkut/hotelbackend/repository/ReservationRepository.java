@@ -6,6 +6,8 @@ import com.dedekorkut.hotelbackend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -13,6 +15,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByUserId(long userId);
 
-    List<Reservation> findAllByUserAndRoom_Hotel(User user, Hotel hotel);
     List<Reservation> findAllByUser_IdAndRoom_Hotel_Id(long userId, long hotelId);
+
+    Reservation findByDateAndRoomId(LocalDate date, Long roomId);
+
 }

@@ -1,9 +1,12 @@
 package com.dedekorkut.hotelbackend.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+@Builder
 @Entity
 @Table(name = "reservations")
 public class Reservation {
@@ -20,14 +23,14 @@ public class Reservation {
     private Room room;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    private LocalDate createdAt;
 
     public Reservation() {}
 
-    public Reservation(Long id, User user, Room room, Date startDate, Date date, Date createdAt) {
+    public Reservation(Long id, User user, Room room, LocalDate date, LocalDate createdAt) {
         this.id = id;
         this.user = user;
         this.room = room;
@@ -59,11 +62,11 @@ public class Reservation {
         this.room = room;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -71,11 +74,11 @@ public class Reservation {
         this.id = id;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 }

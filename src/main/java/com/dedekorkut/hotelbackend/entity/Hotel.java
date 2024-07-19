@@ -21,13 +21,17 @@ public class Hotel {
     @Column(name = "address", nullable = false)
     private String address;
 
+    @Column(name = "rating")
+    private Double rating;
+
     public Hotel() {}
 
-    public Hotel(Long id, String name, String city, String address) {
+    public Hotel(Long id, String name, String city, String address, Double rating) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.address = address;
+        this.rating = rating;
     }
 
     public Long getId() {
@@ -64,5 +68,13 @@ public class Hotel {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }
