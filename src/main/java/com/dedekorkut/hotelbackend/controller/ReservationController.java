@@ -1,7 +1,8 @@
 package com.dedekorkut.hotelbackend.controller;
 
+import com.dedekorkut.hotelbackend.dto.NewReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
-import com.dedekorkut.hotelbackend.entity.Reservation;
+import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -26,11 +27,15 @@ public class ReservationController {
         return reservationService.findAllByUserId(userId);
     }
 
-    @PostMapping(path = "/user/{userId}/room/{roomId}/start/{start}/end/{end}")
-    public ResponseEntity<List<ReservationDto>> createReservation(@PathVariable Long userId, @PathVariable Long roomId,
-                                                                  @PathVariable @DateTimeFormat LocalDate start,
-                                                                  @PathVariable @DateTimeFormat LocalDate end){
-        List<ReservationDto> list = reservationService.save(start,end,userId,roomId);
+    @GetMapping(path = "/start/{start}/end/{end}")
+    public List<RoomDto> findAvailableRooms(@PathVariable @DateTimeFormat LocalDate start,
+                                            @PathVariable @DateTimeFormat LocalDate end) {
+        return reservationService.findAvailableRooms(start, end);
+    }
+
+    @PostMapping()
+    public ResponseEntity<List<ReservationDto>> createReservation(@RequestBody NewReservationDto newReservationDto){
+        List<ReservationDto> list = reservationService.save(newReservationDto);
 
         if(list == null || list.isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -38,9 +43,10 @@ public class ReservationController {
         return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/cancel/room/{roomId}")
-    public HttpStatus cancelReservation(@PathVariable Long roomId, @RequestParam long... reservationIds){
+    @DeleteMapping(path = "/cancel")
+    public HttpStatus cancelReservation(@RequestParam long... reservationIds){
         reservationService.cancelReservation(reservationIds);
         return HttpStatus.NO_CONTENT;
     }
+
 }
