@@ -31,7 +31,7 @@ public class HotelController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<HotelDto> createHotel(@RequestBody HotelDto hotelDto) {
         if (hotelDto.getName() == null || hotelDto.getAddress() == null ||
                 hotelDto.getCity() == null){

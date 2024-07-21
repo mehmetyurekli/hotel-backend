@@ -1,5 +1,6 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
+import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.entity.Hotel;
@@ -38,18 +39,12 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomDto> findAllByHotelId(Long hotelId) {
         Optional<HotelDto> hotel = hotelService.findById(hotelId);
         if(hotelService.findById(hotelId).isEmpty()) {
-            return null;
+            throw new WillfulException("Hotel not found");
         }
         return roomRepository.findAllByHotel(HotelMapper.map(hotel.get()))
                 .stream()
-                .map(RoomMapper::map)
+                .map(RoomMapper::mapWithoutHotel)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<RoomDto> findAvailable(Long hotelId, LocalDate start, LocalDate end) {
-
-        return List.of();
     }
 
     @Override
@@ -61,7 +56,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomDto save(RoomDto room, long hotelId) {
         Optional<HotelDto> hotel = hotelService.findById(hotelId);
         if(hotelService.findById(hotelId).isEmpty()) {
-            return null;
+            throw new WillfulException("Hotel not found");
         }
         room.setHotel(hotel.get());
         Room entity = RoomMapper.map(room);

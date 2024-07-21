@@ -23,12 +23,7 @@ public class RoomController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping
-    public List<RoomDto> getAllRooms() {
-        return roomService.findAll();
-    }
-
-    @GetMapping(path = "/start/{start}/end/{end}")
+    @GetMapping(path = "/available/start/{start}/end/{end}")
     public List<RoomDto> getAvailableRooms(@PathVariable @DateTimeFormat LocalDate start,
                                            @PathVariable @DateTimeFormat LocalDate end) {
 
@@ -44,7 +39,7 @@ public class RoomController {
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
-    @PostMapping("/hotel/{hotelId}")
+    @PostMapping("/new/hotel/{hotelId}")
     public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto, @PathVariable Long hotelId) {
 
         RoomDto saved = roomService.save(roomDto, hotelId);

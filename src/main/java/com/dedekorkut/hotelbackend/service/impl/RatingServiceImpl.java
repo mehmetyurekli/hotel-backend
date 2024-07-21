@@ -1,6 +1,8 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
+import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
+import com.dedekorkut.hotelbackend.dto.NewRatingDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
 import com.dedekorkut.hotelbackend.entity.Rating;
@@ -41,44 +43,62 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    public List<RatingDto> findAllByUserId(long userId) {
+        return ratingRepository.findAllByUserId(userId)
+                .stream()
+                .map(RatingMapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RatingDto> findAllByHotelId(long hotelId) {
+        return ratingRepository.findAllByHotelId(hotelId)
+                .stream()
+                .map(RatingMapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<RatingDto> getRatingById(long id) {
         return ratingRepository.findById(id).map(RatingMapper::map);
     }
 
     @Override
-    public RatingDto addRating(Long hotelId, Long userId, Double rating) {
-        Optional<UserDto> user = userService.findById(userId);
-        Optional<HotelDto> hotel = hotelService.findById(hotelId);
+    public RatingDto addRating(NewRatingDto newRatingDto){
+        Optional<UserDto> user = userService.findById(newRatingDto.getUserId());
+        Optional<HotelDto> hotel = hotelService.findById(newRatingDto.getHotelId());
 
         if(hotel.isEmpty() || user.isEmpty()) {
-            return null;
+            throw new WillfulException("Hotel or User not found.");
         }
-        if(reservationService.getStays(hotelId, userId).isEmpty()) {
-            return null; //no reservation, cant review hotel
+        if(reservationService.getStays(newRatingDto.getHotelId(), newRatingDto.getUserId()).isEmpty()) {
+            throw new WillfulException("No reservation found."); //no reservation, cant review hotel
+        }
+        if(newRatingDto.getRating() < 0 || newRatingDto.getRating() > 10) {
+            throw new WillfulException("Rating must be between 0 and 10.");
         }
 
-        Optional<Rating> existing = ratingRepository.findRatingByHotelIdAndUserId(hotelId, userId);
+        Optional<Rating> existing = ratingRepository.findRatingByHotelIdAndUserId(newRatingDto.getHotelId(), newRatingDto.getUserId());
+        Rating existingOrNewRating;
         if(existing.isPresent()) {
-            Rating replaced = existing.get();
-            replaced.setRating(rating);
-            replaced = ratingRepository.save(replaced);
-
-            //update the rating field in hotel entity
-            hotel.get().setRating(ratingRepository.avgRatingByHotelId(hotelId));
-            hotelService.save(hotel.get());
-            return RatingMapper.map(replaced);
-
+            existingOrNewRating = existing.get();
+            existingOrNewRating.setRating(newRatingDto.getRating());
+            existingOrNewRating = ratingRepository.save(existingOrNewRating);
         }
-        Rating newRating = Rating.builder()
-                .hotel(HotelMapper.map(hotel.get()))
-                .user(UserMapper.map(user.get()))
-                .rating(rating)
-                .build();
+        else{
+            existingOrNewRating = Rating.builder()
+                    .hotel(HotelMapper.map(hotel.get()))
+                    .user(UserMapper.map(user.get()))
+                    .rating(newRatingDto.getRating())
+                    .build();
 
-        newRating = ratingRepository.save(newRating);
-        hotel.get().setRating(ratingRepository.avgRatingByHotelId(hotelId));
+            existingOrNewRating = ratingRepository.save(existingOrNewRating);
+        }
+
+        //update the hotel's rating field
+        hotel.get().setRating(ratingRepository.avgRatingByHotelId(newRatingDto.getHotelId()));
         hotelService.save(hotel.get());
-        return RatingMapper.map(newRating);
+        return RatingMapper.map(existingOrNewRating);
     }
 
     @Override

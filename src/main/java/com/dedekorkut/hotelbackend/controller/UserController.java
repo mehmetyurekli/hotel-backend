@@ -31,7 +31,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         if(userDto.getFirstName() == null || userDto.getLastName() == null ||
                 userDto.getEmail() == null || userDto.getRole() == null) {

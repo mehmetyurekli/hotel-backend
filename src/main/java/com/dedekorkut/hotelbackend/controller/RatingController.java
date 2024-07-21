@@ -1,5 +1,6 @@
 package com.dedekorkut.hotelbackend.controller;
 
+import com.dedekorkut.hotelbackend.dto.NewRatingDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.service.RatingService;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,16 @@ public class RatingController {
         return ratingService.findAll();
     }
 
+    @GetMapping("/hotel/{hotelId}")
+    public List<RatingDto> getRatingsByHotel(@PathVariable long hotelId) {
+        return ratingService.findAllByHotelId(hotelId);
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<RatingDto> getRatingsByUserId(@PathVariable long userId) {
+        return ratingService.findAllByUserId(userId);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<RatingDto> getRatingById(@PathVariable long id) {
         if(ratingService.getRatingById(id).isEmpty()) {
@@ -31,15 +42,9 @@ public class RatingController {
         return new ResponseEntity<>(ratingService.getRatingById(id).get(), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/hotel/{hotelId}/user/{userId}/rating/{rating}")
-    public ResponseEntity<RatingDto> createRating(@PathVariable Long hotelId,
-                                                  @PathVariable Long userId,
-                                                  @PathVariable Double rating) {
-
-        RatingDto dto = ratingService.addRating(hotelId, userId, rating);
-        if(dto == null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+    @PostMapping("/new")
+    public ResponseEntity<RatingDto> createRating(@RequestBody NewRatingDto newRatingDto) {
+        RatingDto dto = ratingService.addRating(newRatingDto);
         return ResponseEntity.ok().body(dto);
     }
 

@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -22,12 +22,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Reservation findByDateAndRoomId(LocalDate date, Long roomId);
 
 
-    @Query(value = "SELECT r.id FROM rooms r\n" +
-            "LEFT JOIN(\n" +
-            "\tSELECT room_id, date FROM reservations\n" +
-            "\tWHERE date BETWEEN :start AND :end\n" +
-            ") as x ON x.room_id = r.id\n" +
-            "WHERE x.date IS NULL\n", nativeQuery = true)
-    List<Long> findAvailableRooms(@Param("start") LocalDate start, @Param("end") LocalDate end);
+    @Query(value = "SELECT\n" +
+            "    r.id\n" +
+            "FROM rooms r\n" +
+            "         LEFT JOIN(\n" +
+            "    SELECT room_id, date\n" +
+            "    FROM reservations\n" +
+            "    WHERE date BETWEEN :start AND :end\n" +
+            ")as x ON x.room_id = r.id\n" +
+            "WHERE x.date IS NULL", nativeQuery = true)
+    List<Long> findAvailableRooms(@Param("start") Date start, @Param("end") Date end);
+
 
 }

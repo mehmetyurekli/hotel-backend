@@ -1,5 +1,6 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
+import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.NewReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
@@ -14,6 +15,7 @@ import com.dedekorkut.hotelbackend.service.RoomService;
 import com.dedekorkut.hotelbackend.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,7 +56,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<RoomDto> findAvailableRooms(LocalDate start, LocalDate end) {
-        List<Long> ids = reservationRepository.findAvailableRooms(start, end);
+        List<Long> ids = reservationRepository.findAvailableRooms(Date.valueOf(start), Date.valueOf(end));
         List<RoomDto> rooms = new ArrayList<>();
         for(Long id : ids){
             rooms.add(roomService.findById(id).get());
@@ -67,7 +69,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         if(newReservationDto.getRoomId() == null || newReservationDto.getUserId() == null ||
         newReservationDto.getStart() == null || newReservationDto.getEnd() == null) {
-            return null;
+            throw new WillfulException("Missing a field from (roomId, userId, start, end)");
         }
         LocalDate start = newReservationDto.getStart();
         LocalDate end = newReservationDto.getEnd();
@@ -76,17 +78,17 @@ public class ReservationServiceImpl implements ReservationService {
         Optional<RoomDto> roomDto = roomService.findById(newReservationDto.getRoomId());
 
         if(userDto.isEmpty() || roomDto.isEmpty()) {
-            return null; //invalid room or user
+            throw new WillfulException("Room or user not found");
         }
 
         if(!start.isBefore(end) && !start.isEqual(end)){
-            return null; //invalid dates
+            throw new WillfulException("Invalid reservation dates");
         }
 
         List<Reservation> reservations = new ArrayList<>();
         for (LocalDate date = start; date.isBefore(end) || date.isEqual(end); date = date.plusDays(1)) {
             if(!isAvailable(date, newReservationDto.getRoomId())){
-                return null;
+                throw new WillfulException("Room not available on given date interval");
             }
             Reservation reservation = Reservation.builder()
                     .user(UserMapper.map(userDto.get()))

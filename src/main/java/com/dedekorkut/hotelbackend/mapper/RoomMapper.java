@@ -16,6 +16,16 @@ public class RoomMapper {
 
     }
 
+    public static RoomDto mapWithoutHotel(Room entity) {
+        return RoomDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .beds(entity.getBeds())
+                .capacity(entity.getCapacity())
+                .build();
+
+    }
+
     public static Room map(RoomDto dto) {
         return Room.builder()
                 .id(dto.getId())

@@ -27,19 +27,9 @@ public class ReservationController {
         return reservationService.findAllByUserId(userId);
     }
 
-    @GetMapping(path = "/start/{start}/end/{end}")
-    public List<RoomDto> findAvailableRooms(@PathVariable @DateTimeFormat LocalDate start,
-                                            @PathVariable @DateTimeFormat LocalDate end) {
-        return reservationService.findAvailableRooms(start, end);
-    }
-
-    @PostMapping()
+    @PostMapping("/new")
     public ResponseEntity<List<ReservationDto>> createReservation(@RequestBody NewReservationDto newReservationDto){
         List<ReservationDto> list = reservationService.save(newReservationDto);
-
-        if(list == null || list.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
 
