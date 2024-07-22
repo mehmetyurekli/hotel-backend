@@ -1,7 +1,7 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
 import com.dedekorkut.hotelbackend.common.WillfulException;
-import com.dedekorkut.hotelbackend.dto.NewReservationDto;
+import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;

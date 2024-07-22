@@ -3,6 +3,7 @@ package com.dedekorkut.hotelbackend.service.impl;
 import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
+import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
 import com.dedekorkut.hotelbackend.entity.Hotel;
 import com.dedekorkut.hotelbackend.entity.Room;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
@@ -53,15 +54,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomDto save(RoomDto room, long hotelId) {
+    public RoomDto save(NewRoomDto newRoomDto, long hotelId) {
+
+        if(newRoomDto.getCapacity() < 1 || newRoomDto.getBeds() < 1 || newRoomDto.getName() == null) {
+            throw new WillfulException("Missing a field from (beds, capacity, name)");
+        }
+
         Optional<HotelDto> hotel = hotelService.findById(hotelId);
         if(hotelService.findById(hotelId).isEmpty()) {
             throw new WillfulException("Hotel not found");
         }
-        room.setHotel(hotel.get());
-        Room entity = RoomMapper.map(room);
-        entity = roomRepository.save(entity);
-        return RoomMapper.map(entity);
+
+        Room room = Room.builder()
+                .name(newRoomDto.getName())
+                .beds(newRoomDto.getBeds())
+                .capacity(newRoomDto.getCapacity())
+                .build();
+
+        room.setHotel(HotelMapper.map(hotel.get()));
+
+        room = roomRepository.save(room);
+        return RoomMapper.map(room);
     }
 
     @Override

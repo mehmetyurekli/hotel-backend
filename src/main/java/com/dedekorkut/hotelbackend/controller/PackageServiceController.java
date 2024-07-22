@@ -1,6 +1,6 @@
 package com.dedekorkut.hotelbackend.controller;
 
-import com.dedekorkut.hotelbackend.dto.NewPackageServiceDto;
+import com.dedekorkut.hotelbackend.dto.input.NewPackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.PackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.ServiceDto;
 import com.dedekorkut.hotelbackend.service.PackageServiceService;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/package-service")

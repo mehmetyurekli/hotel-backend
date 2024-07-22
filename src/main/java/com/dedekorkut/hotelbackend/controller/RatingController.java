@@ -1,6 +1,6 @@
 package com.dedekorkut.hotelbackend.controller;
 
-import com.dedekorkut.hotelbackend.dto.NewRatingDto;
+import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.service.RatingService;
 import org.springframework.http.HttpStatus;

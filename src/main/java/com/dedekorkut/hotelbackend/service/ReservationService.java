@@ -1,11 +1,10 @@
 package com.dedekorkut.hotelbackend.service;
 
-import com.dedekorkut.hotelbackend.dto.NewReservationDto;
+import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

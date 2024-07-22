@@ -1,6 +1,7 @@
 package com.dedekorkut.hotelbackend.controller;
 
 import com.dedekorkut.hotelbackend.dto.RoomDto;
+import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.RoomService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,9 +38,9 @@ public class RoomController {
     }
 
     @PostMapping("/new/hotel/{hotelId}")
-    public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto, @PathVariable Long hotelId) {
+    public ResponseEntity<RoomDto> createRoom(@RequestBody NewRoomDto newRoomDto, @PathVariable Long hotelId) {
 
-        RoomDto saved = roomService.save(roomDto, hotelId);
+        RoomDto saved = roomService.save(newRoomDto, hotelId);
 
         if (saved == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

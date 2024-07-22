@@ -1,15 +1,12 @@
 package com.dedekorkut.hotelbackend.controller;
 
-import com.dedekorkut.hotelbackend.dto.NewReservationDto;
+import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
-import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.service.ReservationService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController

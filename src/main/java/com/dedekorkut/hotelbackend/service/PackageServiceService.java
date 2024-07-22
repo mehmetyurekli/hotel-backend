@@ -1,6 +1,6 @@
 package com.dedekorkut.hotelbackend.service;
 
-import com.dedekorkut.hotelbackend.dto.NewPackageServiceDto;
+import com.dedekorkut.hotelbackend.dto.input.NewPackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.PackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.ServiceDto;
 

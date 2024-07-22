@@ -1,4 +1,4 @@
-package com.dedekorkut.hotelbackend.dto;
+package com.dedekorkut.hotelbackend.dto.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

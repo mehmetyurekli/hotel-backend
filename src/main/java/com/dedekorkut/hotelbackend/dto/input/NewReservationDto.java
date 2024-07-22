@@ -1,4 +1,4 @@
-package com.dedekorkut.hotelbackend.dto;
+package com.dedekorkut.hotelbackend.dto.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +17,5 @@ public class NewReservationDto {
     private Long roomId;
     private LocalDate start;
     private LocalDate end;
-
 
 }

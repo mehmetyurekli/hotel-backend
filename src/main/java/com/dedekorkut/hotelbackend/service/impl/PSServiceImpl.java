@@ -1,11 +1,10 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
 import com.dedekorkut.hotelbackend.common.WillfulException;
-import com.dedekorkut.hotelbackend.dto.NewPackageServiceDto;
+import com.dedekorkut.hotelbackend.dto.input.NewPackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.PackageDto;
 import com.dedekorkut.hotelbackend.dto.PackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.ServiceDto;
-import com.dedekorkut.hotelbackend.entity.Package;
 import com.dedekorkut.hotelbackend.entity.PackageService;
 import com.dedekorkut.hotelbackend.mapper.PackageMapper;
 import com.dedekorkut.hotelbackend.mapper.PackageServiceMapper;
@@ -61,6 +60,11 @@ public class PSServiceImpl implements PackageServiceService {
 
     @Override
     public List<PackageServiceDto> save(NewPackageServiceDto newPackageServiceDto) {
+
+        if(newPackageServiceDto.getServiceId() == null || newPackageServiceDto.getPackageId() == null){
+            throw new WillfulException("Missing a field from (service_id, package_id)");
+        }
+
         Optional<PackageDto> packageDto = packageService.getPackageById(newPackageServiceDto.getPackageId());
 
         List<ServiceDto> services = new ArrayList<>();

@@ -1,6 +1,6 @@
 package com.dedekorkut.hotelbackend.service;
 
-import com.dedekorkut.hotelbackend.dto.NewRatingDto;
+import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
 
 import java.util.List;

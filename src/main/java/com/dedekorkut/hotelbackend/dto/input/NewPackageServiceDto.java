@@ -1,4 +1,4 @@
-package com.dedekorkut.hotelbackend.dto;
+package com.dedekorkut.hotelbackend.dto.input;
 
 import lombok.*;
 
@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class NewPackageServiceDto {
-    private long packageId;
-    private long[] serviceId;
+    private Long packageId;
+    private Long[] serviceId;
 }
