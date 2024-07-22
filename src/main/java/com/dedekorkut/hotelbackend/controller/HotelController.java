@@ -33,10 +33,6 @@ public class HotelController {
 
     @PostMapping("/new")
     public ResponseEntity<HotelDto> createHotel(@RequestBody HotelDto hotelDto) {
-        if (hotelDto.getName() == null || hotelDto.getAddress() == null ||
-                hotelDto.getCity() == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         return new ResponseEntity<>(hotelService.save(hotelDto), HttpStatus.CREATED);
     }
 

@@ -1,10 +1,13 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
+import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.entity.Hotel;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
 import com.dedekorkut.hotelbackend.repository.HotelRepository;
 import com.dedekorkut.hotelbackend.service.HotelService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,6 +53,10 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public HotelDto save(HotelDto dto) {
+        if (dto.getName() == null || dto.getAddress() == null ||
+                dto.getCity() == null){
+            throw new WillfulException("Missing a field from (name, address, city)");
+        }
         Hotel entity = HotelMapper.map(dto);
         entity = hotelRepository.save(entity);
         return HotelMapper.map(entity);

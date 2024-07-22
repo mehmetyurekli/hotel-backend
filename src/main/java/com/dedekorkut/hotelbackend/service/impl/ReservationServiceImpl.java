@@ -10,6 +10,7 @@ import com.dedekorkut.hotelbackend.mapper.ReservationMapper;
 import com.dedekorkut.hotelbackend.mapper.RoomMapper;
 import com.dedekorkut.hotelbackend.mapper.UserMapper;
 import com.dedekorkut.hotelbackend.repository.ReservationRepository;
+import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.RoomService;
 import com.dedekorkut.hotelbackend.service.UserService;
@@ -26,15 +27,20 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
     private final RoomService roomService;
+    private final HotelService hotelService;
 
-    public ReservationServiceImpl(ReservationRepository reservationRepository, UserService userService, RoomService roomService) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, UserService userService, RoomService roomService, HotelService hotelService) {
         this.reservationRepository = reservationRepository;
         this.userService = userService;
         this.roomService = roomService;
+        this.hotelService = hotelService;
     }
 
     @Override
     public List<ReservationDto> findAllByUserId(long userId) {
+        if(userService.findById(userId).isEmpty()){
+            throw new WillfulException("User not found");
+        }
         return reservationRepository.findAllByUserId(userId)
                 .stream()
                 .map(ReservationMapper::map)
@@ -43,6 +49,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationDto> getStays(long hotelId, long userId) {
+        if(userService.findById(userId).isEmpty()){
+            throw new WillfulException("User not found");
+        }
+        if(hotelService.findById(hotelId).isEmpty()){
+            throw new WillfulException("Hotel not found");
+        }
         return reservationRepository.findAllByUser_IdAndRoom_Hotel_Id(userId, hotelId)
                 .stream()
                 .map(ReservationMapper::map)

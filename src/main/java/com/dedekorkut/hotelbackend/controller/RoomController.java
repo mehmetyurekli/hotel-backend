@@ -33,9 +33,6 @@ public class RoomController {
     @GetMapping("/hotel/{hotelId}")
     public ResponseEntity<List<RoomDto>> findAllByHotelId(@PathVariable Long hotelId) {
         List<RoomDto> rooms = roomService.findAllByHotelId(hotelId);
-        if(rooms == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 

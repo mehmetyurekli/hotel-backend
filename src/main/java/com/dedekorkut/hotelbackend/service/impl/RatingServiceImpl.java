@@ -44,6 +44,9 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public List<RatingDto> findAllByUserId(long userId) {
+        if(userService.findById(userId).isEmpty()){
+            throw new WillfulException("User not found");
+        }
         return ratingRepository.findAllByUserId(userId)
                 .stream()
                 .map(RatingMapper::map)
@@ -52,6 +55,9 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public List<RatingDto> findAllByHotelId(long hotelId) {
+        if(hotelService.findById(hotelId).isEmpty()){
+            throw new WillfulException("Hotel not found");
+        }
         return ratingRepository.findAllByHotelId(hotelId)
                 .stream()
                 .map(RatingMapper::map)
