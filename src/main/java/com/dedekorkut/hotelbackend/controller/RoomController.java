@@ -4,6 +4,7 @@ import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.RoomService;
+import com.dedekorkut.hotelbackend.specification.RoomFilter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,10 @@ public class RoomController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping(path = "/available/start/{start}/end/{end}")
-    public List<RoomDto> getAvailableRooms(@PathVariable @DateTimeFormat LocalDate start,
-                                           @PathVariable @DateTimeFormat LocalDate end) {
+    @GetMapping(path = "/filter")
+    public List<RoomDto> getAvailableRooms(@RequestBody RoomFilter filter) {
 
-        return reservationService.findAvailableRooms(start, end);
+        return roomService.findAll(filter);
     }
 
     @GetMapping("/hotel/{hotelId}")

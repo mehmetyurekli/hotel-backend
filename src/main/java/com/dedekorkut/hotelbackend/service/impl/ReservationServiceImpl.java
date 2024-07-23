@@ -14,6 +14,11 @@ import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.RoomService;
 import com.dedekorkut.hotelbackend.service.UserService;
+import com.dedekorkut.hotelbackend.specification.RoomFilter;
+import com.dedekorkut.hotelbackend.specification.RoomSpecs;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -64,16 +69,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Optional<ReservationDto> findByReservationId(long reservationId) {
         return reservationRepository.findById(reservationId).map(ReservationMapper::map);
-    }
-
-    @Override
-    public List<RoomDto> findAvailableRooms(LocalDate start, LocalDate end) {
-        List<Long> ids = reservationRepository.findAvailableRooms(Date.valueOf(start), Date.valueOf(end));
-        List<RoomDto> rooms = new ArrayList<>();
-        for(Long id : ids){
-            rooms.add(roomService.findById(id).get());
-        }
-        return rooms;
     }
 
     @Override

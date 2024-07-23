@@ -11,6 +11,12 @@ import com.dedekorkut.hotelbackend.mapper.RoomMapper;
 import com.dedekorkut.hotelbackend.repository.RoomRepository;
 import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.RoomService;
+import com.dedekorkut.hotelbackend.specification.RoomFilter;
+import com.dedekorkut.hotelbackend.specification.RoomSpecs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,8 +36,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomDto> findAll() {
-        return roomRepository.findAll().stream()
+    public List<RoomDto> findAll(RoomFilter filter) {
+
+        return roomRepository.findAll(RoomSpecs.filter(filter))
+                .stream()
                 .map(RoomMapper::map)
                 .collect(Collectors.toList());
     }
@@ -56,7 +64,8 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomDto save(NewRoomDto newRoomDto, long hotelId) {
 
-        if(newRoomDto.getCapacity() < 1 || newRoomDto.getBeds() < 1 || newRoomDto.getName() == null) {
+        if(newRoomDto.getCapacity() < 1 || newRoomDto.getBeds() < 1 || newRoomDto.getName() == null ||
+                newRoomDto.getPrice() == null) {
             throw new WillfulException("Missing a field from (beds, capacity, name)");
         }
 
@@ -69,6 +78,7 @@ public class RoomServiceImpl implements RoomService {
                 .name(newRoomDto.getName())
                 .beds(newRoomDto.getBeds())
                 .capacity(newRoomDto.getCapacity())
+                .price(newRoomDto.getPrice())
                 .build();
 
         room.setHotel(HotelMapper.map(hotel.get()));

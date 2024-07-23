@@ -12,6 +12,7 @@ public class RoomMapper {
                 .name(entity.getName())
                 .beds(entity.getBeds())
                 .capacity(entity.getCapacity())
+                .price(entity.getPrice())
                 .build();
 
     }
@@ -22,6 +23,7 @@ public class RoomMapper {
                 .name(entity.getName())
                 .beds(entity.getBeds())
                 .capacity(entity.getCapacity())
+                .price(entity.getPrice())
                 .build();
 
     }
@@ -33,6 +35,7 @@ public class RoomMapper {
                 .name(dto.getName())
                 .beds(dto.getBeds())
                 .capacity(dto.getCapacity())
+                .price(dto.getPrice())
                 .build();
 
     }
