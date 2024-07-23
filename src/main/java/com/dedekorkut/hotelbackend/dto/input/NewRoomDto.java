@@ -13,8 +13,9 @@ import java.math.BigDecimal;
 @Setter
 public class NewRoomDto {
 
+    private Long internalId;
     private String name;
-    private int beds;
-    private int capacity;
+    private Integer beds;
+    private Integer capacity;
     private BigDecimal price;
 }

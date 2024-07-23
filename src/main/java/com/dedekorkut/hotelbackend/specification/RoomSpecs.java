@@ -51,7 +51,6 @@ public class RoomSpecs {
                 predicates.add(builder.equal(hotelJoin.get("city"), filter.getCity()));
             }
 
-
             return builder.and(predicates.toArray(Predicate[]::new));
         };
     }

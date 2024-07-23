@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class RoomDto {
 
     private long id;
+    private long internalId;
     private HotelDto hotel;
     private String name;
     private int beds;
@@ -21,8 +22,9 @@ public class RoomDto {
 
     public RoomDto() {}
 
-    public RoomDto(Long id, HotelDto hotel, String name, int beds, int capacity, BigDecimal price) {
+    public RoomDto(long id, long internalId, HotelDto hotel, String name, int beds, int capacity, BigDecimal price) {
         this.id = id;
+        this.internalId = internalId;
         this.hotel = hotel;
         this.name = name;
         this.beds = beds;
