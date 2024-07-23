@@ -18,17 +18,18 @@ public class RoomSpecs {
             List<Predicate> predicates = new ArrayList<>();
 
             //selecting reservations between given date
-
             if(filter.getStartDate() != null && filter.getEndDate() != null){
                 LocalDate start = LocalDate.parse(filter.getStartDate());
                 LocalDate end = LocalDate.parse(filter.getEndDate());
-                if(start.isAfter(end) || start.isEqual(end)){
+                if(start.isBefore(end) || start.isEqual(end)){
+                    //creating a subquery for finding the reserved rooms in given date interval
                     Subquery<Long> subquery = query.subquery(Long.class);
                     Root<Reservation> reservationRoot = subquery.from(Reservation.class);
                     subquery.select(reservationRoot.get("room").get("id")).where(
                             builder.between(reservationRoot.get("date").as(LocalDate.class),
                                     LocalDate.parse(filter.getStartDate()), LocalDate.parse(filter.getEndDate()))
                     );
+                    //getting rooms not in the subquery.(rooms that are not reserved in the date interval)
                     predicates.add(builder.not(root.get("id").in(subquery)));
                 }
             }
