@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -32,7 +31,7 @@ public class RoomController {
 
     @GetMapping
     public Page<RoomDto> getAllRooms(@RequestParam(name = "page", defaultValue = "0") int page,
-                                     @RequestParam(name = "limit", defaultValue = "10") int limit){
+                                     @RequestParam(name = "limit", defaultValue = "10") int limit) {
         return roomService.findAll(page, limit);
     }
 

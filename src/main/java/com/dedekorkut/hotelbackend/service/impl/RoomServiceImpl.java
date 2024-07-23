@@ -18,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -36,7 +34,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Page<RoomDto> findAll(int page, int limit, RoomFilter filter) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
-        Page<Room> pages = roomRepository.findAll(RoomSpecs.filter(filter) ,pageable);
+        Page<Room> pages = roomRepository.findAll(RoomSpecs.filter(filter), pageable);
 
         return pages.map(RoomMapper::map);
     }

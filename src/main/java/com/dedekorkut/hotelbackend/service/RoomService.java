@@ -5,11 +5,11 @@ import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
 import com.dedekorkut.hotelbackend.specification.RoomFilter;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface RoomService {
     Page<RoomDto> findAll(int page, int limit, RoomFilter filter);
+
     Page<RoomDto> findAll(int page, int limit);
 
     Page<RoomDto> findAllByHotelId(int page, int limit, Long hotelId);

@@ -6,7 +6,6 @@ import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.entity.Rating;
-import com.dedekorkut.hotelbackend.entity.Room;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
 import com.dedekorkut.hotelbackend.mapper.RatingMapper;
 import com.dedekorkut.hotelbackend.mapper.UserMapper;
@@ -15,16 +14,13 @@ import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.RatingService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.UserService;
-import com.dedekorkut.hotelbackend.specification.RoomSpecs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class RatingServiceImpl implements RatingService {

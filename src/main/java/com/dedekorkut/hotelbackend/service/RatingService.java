@@ -4,7 +4,6 @@ import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface RatingService {

@@ -54,7 +54,7 @@ public class RoomSpecs {
                 predicates.add(builder.equal(hotelJoin.get("city"), filter.getCity()));
             }
 
-            if (filter.getMinimumRating() != null && filter.getMinimumRating() <= 10){
+            if (filter.getMinimumRating() != null && filter.getMinimumRating() <= 10) {
                 Join<Room, Hotel> hotelJoin = root.join("hotel");
                 predicates.add(builder.greaterThanOrEqualTo(hotelJoin.get("rating"), filter.getMinimumRating()));
             }

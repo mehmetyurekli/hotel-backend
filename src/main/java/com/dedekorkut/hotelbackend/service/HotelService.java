@@ -3,7 +3,6 @@ package com.dedekorkut.hotelbackend.service;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface HotelService {

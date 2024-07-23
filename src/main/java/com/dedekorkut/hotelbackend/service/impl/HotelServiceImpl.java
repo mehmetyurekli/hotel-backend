@@ -3,20 +3,16 @@ package com.dedekorkut.hotelbackend.service.impl;
 import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.entity.Hotel;
-import com.dedekorkut.hotelbackend.entity.Room;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
 import com.dedekorkut.hotelbackend.repository.HotelRepository;
 import com.dedekorkut.hotelbackend.service.HotelService;
-import com.dedekorkut.hotelbackend.specification.RoomSpecs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class HotelServiceImpl implements HotelService {
