@@ -1,14 +1,14 @@
 package com.dedekorkut.hotelbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "rooms")
@@ -36,16 +36,4 @@ public class Room {
 
     @Column(name = "price", nullable = false)
     private BigDecimal price;
-
-    public Room() {}
-
-    public Room(Long id, Long internalId, Hotel hotel, String name, int beds, int capacity, BigDecimal price) {
-        this.id = id;
-        this.internalId = internalId;
-        this.hotel = hotel;
-        this.name = name;
-        this.beds = beds;
-        this.capacity = capacity;
-        this.price = price;
-    }
 }

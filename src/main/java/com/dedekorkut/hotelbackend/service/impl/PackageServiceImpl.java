@@ -1,15 +1,12 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
 import com.dedekorkut.hotelbackend.dto.PackageDto;
-import com.dedekorkut.hotelbackend.dto.ServiceDto;
 import com.dedekorkut.hotelbackend.entity.Package;
 import com.dedekorkut.hotelbackend.mapper.PackageMapper;
 import com.dedekorkut.hotelbackend.repository.PackageRepository;
 import com.dedekorkut.hotelbackend.service.PackageService;
-import com.dedekorkut.hotelbackend.service.ServiceService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

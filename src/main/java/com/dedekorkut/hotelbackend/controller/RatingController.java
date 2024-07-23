@@ -1,7 +1,7 @@
 package com.dedekorkut.hotelbackend.controller;
 
-import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
+import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.service.RatingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class RatingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RatingDto> getRatingById(@PathVariable long id) {
-        if(ratingService.getRatingById(id).isEmpty()) {
+        if (ratingService.getRatingById(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(ratingService.getRatingById(id).get(), HttpStatus.OK);
@@ -50,7 +50,7 @@ public class RatingController {
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteRatingById(@PathVariable long id) {
-        if(ratingService.getRatingById(id).isEmpty()) {
+        if (ratingService.getRatingById(id).isEmpty()) {
             return HttpStatus.NOT_FOUND;
         }
         ratingService.deleteRatingById(id);

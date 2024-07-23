@@ -11,7 +11,9 @@ import java.util.Optional;
 public interface RatingRepository extends JpaRepository<Rating, Long> {
 
     Optional<Rating> findRatingByHotelIdAndUserId(Long hotelId, Long userId);
+
     List<Rating> findAllByUserId(Long userId);
+
     List<Rating> findAllByHotelId(Long hotelId);
 
     @Query("SELECT avg(r.rating) from Rating r where r.hotel.id = :hotelId")

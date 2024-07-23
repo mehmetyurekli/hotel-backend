@@ -5,7 +5,6 @@ import com.dedekorkut.hotelbackend.dto.PackageDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationPackageDto;
 import com.dedekorkut.hotelbackend.dto.input.NewReservationPackageDto;
-import com.dedekorkut.hotelbackend.entity.Reservation;
 import com.dedekorkut.hotelbackend.entity.ReservationPackage;
 import com.dedekorkut.hotelbackend.mapper.PackageMapper;
 import com.dedekorkut.hotelbackend.mapper.ReservationMapper;
@@ -16,7 +15,6 @@ import com.dedekorkut.hotelbackend.service.ReservationPackageService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +50,9 @@ public class ReservationPackageServiceImpl implements ReservationPackageService 
     public List<ReservationPackageDto> createReservationPackage(NewReservationPackageDto newReservationPackageDto) {
 
         List<ReservationDto> reservationDtos = new ArrayList<>();
-        for(Long reservationId : newReservationPackageDto.getReservationIds()) {
+        for (Long reservationId : newReservationPackageDto.getReservationIds()) {
             Optional<ReservationDto> reservationDto = reservationService.findByReservationId(reservationId);
-            if(reservationDto.isEmpty()){
+            if (reservationDto.isEmpty()) {
                 throw new WillfulException("Reservation with id " + reservationId + " not found");
             }
             reservationDtos.add(reservationDto.get());
@@ -62,12 +60,12 @@ public class ReservationPackageServiceImpl implements ReservationPackageService 
 
         Optional<PackageDto> packageDto = packageService.getPackageById(newReservationPackageDto.getPackageId());
 
-        if(packageDto.isEmpty()) {
+        if (packageDto.isEmpty()) {
             throw new WillfulException("Package not found");
         }
 
         List<ReservationPackage> reservationPackages = new ArrayList<>();
-        for(ReservationDto reservationDto : reservationDtos) {
+        for (ReservationDto reservationDto : reservationDtos) {
             ReservationPackage reservationPackage = ReservationPackage.builder()
                     .reservation(ReservationMapper.map(reservationDto))
                     .aPackage(PackageMapper.map(packageDto.get()))

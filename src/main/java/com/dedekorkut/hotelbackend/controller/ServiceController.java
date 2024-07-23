@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/services")
@@ -26,7 +25,7 @@ public class ServiceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ServiceDto> getServiceById(@PathVariable("id") Long id) {
-        if(serviceService.getServiceById(id).isPresent()) {
+        if (serviceService.getServiceById(id).isPresent()) {
             return new ResponseEntity<>(serviceService.getServiceById(id).get(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

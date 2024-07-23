@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping("/new")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        if(userDto.getFirstName() == null || userDto.getLastName() == null ||
+        if (userDto.getFirstName() == null || userDto.getLastName() == null ||
                 userDto.getEmail() == null || userDto.getRole() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

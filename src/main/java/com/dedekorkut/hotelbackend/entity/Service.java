@@ -3,13 +3,13 @@ package com.dedekorkut.hotelbackend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "services")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@Entity
+@Table(name = "services")
 public class Service {
 
     @Id

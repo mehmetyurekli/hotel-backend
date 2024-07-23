@@ -1,8 +1,6 @@
 package com.dedekorkut.hotelbackend.repository;
 
-import com.dedekorkut.hotelbackend.entity.Hotel;
 import com.dedekorkut.hotelbackend.entity.Reservation;
-import com.dedekorkut.hotelbackend.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,10 +1,10 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
 import com.dedekorkut.hotelbackend.common.WillfulException;
-import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
+import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.entity.Reservation;
 import com.dedekorkut.hotelbackend.mapper.ReservationMapper;
 import com.dedekorkut.hotelbackend.mapper.RoomMapper;
@@ -14,16 +14,12 @@ import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.RoomService;
 import com.dedekorkut.hotelbackend.service.UserService;
-import com.dedekorkut.hotelbackend.specification.RoomFilter;
-import com.dedekorkut.hotelbackend.specification.RoomSpecs;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationDto> findAllByUserId(long userId) {
-        if(userService.findById(userId).isEmpty()){
+        if (userService.findById(userId).isEmpty()) {
             throw new WillfulException("User not found");
         }
         return reservationRepository.findAllByUserId(userId)
@@ -54,10 +50,10 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationDto> getStays(long hotelId, long userId) {
-        if(userService.findById(userId).isEmpty()){
+        if (userService.findById(userId).isEmpty()) {
             throw new WillfulException("User not found");
         }
-        if(hotelService.findById(hotelId).isEmpty()){
+        if (hotelService.findById(hotelId).isEmpty()) {
             throw new WillfulException("Hotel not found");
         }
         return reservationRepository.findAllByUser_IdAndRoom_Hotel_Id(userId, hotelId)
@@ -74,8 +70,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationDto> save(NewReservationDto newReservationDto) {
 
-        if(newReservationDto.getRoomId() == null || newReservationDto.getUserId() == null ||
-        newReservationDto.getStart() == null || newReservationDto.getEnd() == null) {
+        if (newReservationDto.getRoomId() == null || newReservationDto.getUserId() == null ||
+                newReservationDto.getStart() == null || newReservationDto.getEnd() == null) {
             throw new WillfulException("Missing a field from (roomId, userId, start, end)");
         }
         LocalDate start = newReservationDto.getStart();
@@ -84,17 +80,17 @@ public class ReservationServiceImpl implements ReservationService {
         Optional<UserDto> userDto = userService.findById(newReservationDto.getUserId());
         Optional<RoomDto> roomDto = roomService.findById(newReservationDto.getRoomId());
 
-        if(userDto.isEmpty() || roomDto.isEmpty()) {
+        if (userDto.isEmpty() || roomDto.isEmpty()) {
             throw new WillfulException("Room or user not found");
         }
 
-        if(!start.isBefore(end) && !start.isEqual(end)){
+        if (!start.isBefore(end) && !start.isEqual(end)) {
             throw new WillfulException("Invalid reservation dates");
         }
 
         List<Reservation> reservations = new ArrayList<>();
         for (LocalDate date = start; date.isBefore(end) || date.isEqual(end); date = date.plusDays(1)) {
-            if(!isAvailable(date, newReservationDto.getRoomId())){
+            if (!isAvailable(date, newReservationDto.getRoomId())) {
                 throw new WillfulException("Room not available on given date interval");
             }
             Reservation reservation = Reservation.builder()

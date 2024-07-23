@@ -26,7 +26,7 @@ public class ReservationPackageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationPackageDto> getReservationPackageById(@PathVariable Long id) {
-        if(reservationPackageService.getReservationPackageById(id).isPresent()){
+        if (reservationPackageService.getReservationPackageById(id).isPresent()) {
             return ResponseEntity.ok(reservationPackageService.getReservationPackageById(id).get());
         }
         return ResponseEntity.notFound().build();
@@ -40,7 +40,7 @@ public class ReservationPackageController {
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteReservationPackageById(@PathVariable("id") Long id) {
-        if (reservationPackageService.getReservationPackageById(id).isPresent()){
+        if (reservationPackageService.getReservationPackageById(id).isPresent()) {
             reservationPackageService.deleteReservationPackageById(id);
             return HttpStatus.NO_CONTENT;
         }

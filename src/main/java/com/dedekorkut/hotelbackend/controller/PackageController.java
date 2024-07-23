@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/packages")
@@ -26,7 +25,7 @@ public class PackageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PackageDto> getPackageById(@PathVariable("id") long id) {
-        if(packageService.getPackageById(id).isPresent()){
+        if (packageService.getPackageById(id).isPresent()) {
             return new ResponseEntity<>(packageService.getPackageById(id).get(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -39,7 +38,7 @@ public class PackageController {
 
     @DeleteMapping("/{id}")
     public HttpStatus deletePackageById(@PathVariable("id") long id) {
-        if(packageService.getPackageById(id).isPresent()){
+        if (packageService.getPackageById(id).isPresent()) {
             packageService.deletePackage(id);
             return HttpStatus.OK;
         }

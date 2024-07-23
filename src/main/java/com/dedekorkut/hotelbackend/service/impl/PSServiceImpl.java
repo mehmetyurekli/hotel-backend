@@ -1,10 +1,10 @@
 package com.dedekorkut.hotelbackend.service.impl;
 
 import com.dedekorkut.hotelbackend.common.WillfulException;
-import com.dedekorkut.hotelbackend.dto.input.NewPackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.PackageDto;
 import com.dedekorkut.hotelbackend.dto.PackageServiceDto;
 import com.dedekorkut.hotelbackend.dto.ServiceDto;
+import com.dedekorkut.hotelbackend.dto.input.NewPackageServiceDto;
 import com.dedekorkut.hotelbackend.entity.PackageService;
 import com.dedekorkut.hotelbackend.mapper.PackageMapper;
 import com.dedekorkut.hotelbackend.mapper.PackageServiceMapper;
@@ -47,12 +47,12 @@ public class PSServiceImpl implements PackageServiceService {
 
     @Override
     public List<ServiceDto> findServicesIncludedInPackage(Long packageId) {
-        if(packageService.getPackageById(packageId).isEmpty()){
+        if (packageService.getPackageById(packageId).isEmpty()) {
             throw new WillfulException("Package not found");
         }
         List<Long> serviceIds = packageServiceRepository.findServicesIncludedInPackage(packageId);
         List<ServiceDto> serviceDtos = new ArrayList<>();
-        for(Long serviceId : serviceIds){
+        for (Long serviceId : serviceIds) {
             serviceDtos.add(serviceService.getServiceById(serviceId).get());
         }
         return serviceDtos;
@@ -61,7 +61,7 @@ public class PSServiceImpl implements PackageServiceService {
     @Override
     public List<PackageServiceDto> save(NewPackageServiceDto newPackageServiceDto) {
 
-        if(newPackageServiceDto.getServiceId() == null || newPackageServiceDto.getPackageId() == null){
+        if (newPackageServiceDto.getServiceId() == null || newPackageServiceDto.getPackageId() == null) {
             throw new WillfulException("Missing a field from (service_id, package_id)");
         }
 
@@ -69,20 +69,20 @@ public class PSServiceImpl implements PackageServiceService {
 
         List<ServiceDto> services = new ArrayList<>();
 
-        for(Long serviceId : newPackageServiceDto.getServiceId()){
+        for (Long serviceId : newPackageServiceDto.getServiceId()) {
             Optional<ServiceDto> serviceDto = serviceService.getServiceById(serviceId);
-            if(serviceDto.isEmpty()){
+            if (serviceDto.isEmpty()) {
                 throw new WillfulException("Service not found");
             }
             services.add(serviceDto.get());
         }
 
-        if(packageDto.isEmpty()){
+        if (packageDto.isEmpty()) {
             throw new WillfulException("Package not found");
         }
 
         List<PackageService> saved = new ArrayList<>();
-        for(ServiceDto serviceDto : services){
+        for (ServiceDto serviceDto : services) {
             PackageService packageService = PackageService.builder()
                     .aPackage(PackageMapper.map(packageDto.get()))
                     .service(ServiceMapper.map(serviceDto))

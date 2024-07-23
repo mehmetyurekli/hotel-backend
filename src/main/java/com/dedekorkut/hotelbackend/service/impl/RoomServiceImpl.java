@@ -4,7 +4,6 @@ import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
-import com.dedekorkut.hotelbackend.entity.Hotel;
 import com.dedekorkut.hotelbackend.entity.Room;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
 import com.dedekorkut.hotelbackend.mapper.RoomMapper;
@@ -13,13 +12,8 @@ import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.RoomService;
 import com.dedekorkut.hotelbackend.specification.RoomFilter;
 import com.dedekorkut.hotelbackend.specification.RoomSpecs;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,7 +41,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<RoomDto> findAllByHotelId(Long hotelId) {
         Optional<HotelDto> hotel = hotelService.findById(hotelId);
-        if(hotelService.findById(hotelId).isEmpty()) {
+        if (hotelService.findById(hotelId).isEmpty()) {
             throw new WillfulException("Hotel not found");
         }
         return roomRepository.findAllByHotel(HotelMapper.map(hotel.get()))
@@ -64,13 +58,13 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomDto save(NewRoomDto newRoomDto, long hotelId) {
 
-        if(newRoomDto.getCapacity() < 1 || newRoomDto.getBeds() < 1 || newRoomDto.getName() == null ||
+        if (newRoomDto.getCapacity() < 1 || newRoomDto.getBeds() < 1 || newRoomDto.getName() == null ||
                 newRoomDto.getPrice() == null) {
             throw new WillfulException("Missing a field from (beds, capacity, name)");
         }
 
         Optional<HotelDto> hotel = hotelService.findById(hotelId);
-        if(hotelService.findById(hotelId).isEmpty()) {
+        if (hotelService.findById(hotelId).isEmpty()) {
             throw new WillfulException("Hotel not found");
         }
 

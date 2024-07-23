@@ -5,7 +5,7 @@ import com.dedekorkut.hotelbackend.entity.User;
 
 public class UserMapper {
 
-    public static UserDto map(User entity){
+    public static UserDto map(User entity) {
         return UserDto.builder()
                 .id(entity.getId())
                 .firstName(entity.getFirstName())
@@ -15,7 +15,7 @@ public class UserMapper {
                 .build();
     }
 
-    public static User map(UserDto dto){
+    public static User map(UserDto dto) {
         return User.builder()
                 .id(dto.getId())
                 .firstName(dto.getFirstName())

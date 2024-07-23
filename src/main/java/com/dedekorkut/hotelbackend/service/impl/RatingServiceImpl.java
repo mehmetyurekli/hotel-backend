@@ -2,9 +2,9 @@ package com.dedekorkut.hotelbackend.service.impl;
 
 import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
-import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
+import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.entity.Rating;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
 import com.dedekorkut.hotelbackend.mapper.RatingMapper;
@@ -44,7 +44,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public List<RatingDto> findAllByUserId(long userId) {
-        if(userService.findById(userId).isEmpty()){
+        if (userService.findById(userId).isEmpty()) {
             throw new WillfulException("User not found");
         }
         return ratingRepository.findAllByUserId(userId)
@@ -55,7 +55,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public List<RatingDto> findAllByHotelId(long hotelId) {
-        if(hotelService.findById(hotelId).isEmpty()){
+        if (hotelService.findById(hotelId).isEmpty()) {
             throw new WillfulException("Hotel not found");
         }
         return ratingRepository.findAllByHotelId(hotelId)
@@ -70,28 +70,27 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public RatingDto addRating(NewRatingDto newRatingDto){
+    public RatingDto addRating(NewRatingDto newRatingDto) {
         Optional<UserDto> user = userService.findById(newRatingDto.getUserId());
         Optional<HotelDto> hotel = hotelService.findById(newRatingDto.getHotelId());
 
-        if(hotel.isEmpty() || user.isEmpty()) {
+        if (hotel.isEmpty() || user.isEmpty()) {
             throw new WillfulException("Hotel or User not found.");
         }
-        if(reservationService.getStays(newRatingDto.getHotelId(), newRatingDto.getUserId()).isEmpty()) {
+        if (reservationService.getStays(newRatingDto.getHotelId(), newRatingDto.getUserId()).isEmpty()) {
             throw new WillfulException("No reservation found."); //no reservation, cant review hotel
         }
-        if(newRatingDto.getRating() < 0 || newRatingDto.getRating() > 10) {
+        if (newRatingDto.getRating() < 0 || newRatingDto.getRating() > 10) {
             throw new WillfulException("Rating must be between 0 and 10.");
         }
 
         Optional<Rating> existing = ratingRepository.findRatingByHotelIdAndUserId(newRatingDto.getHotelId(), newRatingDto.getUserId());
         Rating existingOrNewRating;
-        if(existing.isPresent()) {
+        if (existing.isPresent()) {
             existingOrNewRating = existing.get();
             existingOrNewRating.setRating(newRatingDto.getRating());
             existingOrNewRating = ratingRepository.save(existingOrNewRating);
-        }
-        else{
+        } else {
             existingOrNewRating = Rating.builder()
                     .hotel(HotelMapper.map(hotel.get()))
                     .user(UserMapper.map(user.get()))
@@ -109,7 +108,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public void deleteRatingById(long id) {
-        if(getRatingById(id).isPresent()){
+        if (getRatingById(id).isPresent()) {
             HotelDto hotelDto = getRatingById(id).get().getHotel();
             hotelDto.setRating(ratingRepository.avgRatingByHotelId(hotelDto.getId()));
             hotelService.save(hotelDto);

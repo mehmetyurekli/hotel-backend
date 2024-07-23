@@ -1,7 +1,7 @@
 package com.dedekorkut.hotelbackend.controller;
 
-import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
+import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +25,13 @@ public class ReservationController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<List<ReservationDto>> createReservation(@RequestBody NewReservationDto newReservationDto){
+    public ResponseEntity<List<ReservationDto>> createReservation(@RequestBody NewReservationDto newReservationDto) {
         List<ReservationDto> list = reservationService.save(newReservationDto);
         return new ResponseEntity<>(list, HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/cancel")
-    public HttpStatus cancelReservation(@RequestParam long... reservationIds){
+    public HttpStatus cancelReservation(@RequestParam long... reservationIds) {
         reservationService.cancelReservation(reservationIds);
         return HttpStatus.NO_CONTENT;
     }

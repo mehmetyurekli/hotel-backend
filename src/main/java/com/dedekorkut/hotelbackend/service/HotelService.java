@@ -7,8 +7,12 @@ import java.util.Optional;
 
 public interface HotelService {
     List<HotelDto> findAll();
+
     List<HotelDto> findAllByCity(String city);
+
     Optional<HotelDto> findById(long id);
+
     HotelDto save(HotelDto dto);
+
     void deleteById(long id);
 }

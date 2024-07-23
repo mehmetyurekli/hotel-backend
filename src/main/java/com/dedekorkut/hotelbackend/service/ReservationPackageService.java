@@ -9,7 +9,10 @@ import java.util.Optional;
 public interface ReservationPackageService {
 
     List<ReservationPackageDto> getAllReservationPackages();
+
     Optional<ReservationPackageDto> getReservationPackageById(long id);
+
     List<ReservationPackageDto> createReservationPackage(NewReservationPackageDto newReservationPackageDto);
+
     void deleteReservationPackageById(long id);
 }

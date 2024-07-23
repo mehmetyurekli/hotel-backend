@@ -9,7 +9,8 @@ public class RoomFilter {
     private Integer beds;
     private Integer capacity;
 
-    public RoomFilter(){}
+    public RoomFilter() {
+    }
 
     public RoomFilter(String hotelName, String city, String startDate, String endDate, Integer beds, Integer capacity) {
         this.hotelName = hotelName;

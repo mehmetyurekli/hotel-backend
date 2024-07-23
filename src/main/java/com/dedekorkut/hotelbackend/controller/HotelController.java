@@ -25,7 +25,7 @@ public class HotelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HotelDto> getHotelById(@PathVariable Long id) {
-        if(hotelService.findById(id).isPresent()) {
+        if (hotelService.findById(id).isPresent()) {
             return new ResponseEntity<>(hotelService.findById(id).get(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
