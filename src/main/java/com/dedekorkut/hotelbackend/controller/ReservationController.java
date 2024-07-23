@@ -3,6 +3,7 @@ package com.dedekorkut.hotelbackend.controller;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import com.dedekorkut.hotelbackend.service.ReservationService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,10 @@ public class ReservationController {
     }
 
     @GetMapping(path = "/user/{userId}")
-    public List<ReservationDto> getReservations(@RequestParam(name = "page", defaultValue = "0") int page,
+    public Page<ReservationDto> getReservations(@RequestParam(name = "page", defaultValue = "0") int page,
                                                 @RequestParam(name = "limit", defaultValue = "10") int limit,
                                                 @PathVariable Long userId) {
-        return reservationService.findAllByUserId(userId);
+        return reservationService.findAllByUserId(page, limit, userId);
     }
 
     @PostMapping("/new")

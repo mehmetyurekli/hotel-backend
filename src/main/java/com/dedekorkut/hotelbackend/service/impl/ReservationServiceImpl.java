@@ -5,6 +5,7 @@ import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
 import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
+import com.dedekorkut.hotelbackend.entity.Hotel;
 import com.dedekorkut.hotelbackend.entity.Reservation;
 import com.dedekorkut.hotelbackend.mapper.ReservationMapper;
 import com.dedekorkut.hotelbackend.mapper.RoomMapper;
@@ -14,6 +15,10 @@ import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.RoomService;
 import com.dedekorkut.hotelbackend.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -38,14 +43,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDto> findAllByUserId(long userId) {
+    public Page<ReservationDto> findAllByUserId(int page, int limit, long userId) {
         if (userService.findById(userId).isEmpty()) {
             throw new WillfulException("User not found");
         }
-        return reservationRepository.findAllByUserId(userId)
-                .stream()
-                .map(ReservationMapper::map)
-                .collect(Collectors.toList());
+
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Page<Reservation> pages = reservationRepository.findAll(pageable);
+
+        return pages.map(ReservationMapper::map);
     }
 
     @Override
