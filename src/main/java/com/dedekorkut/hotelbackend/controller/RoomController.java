@@ -4,6 +4,7 @@ import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
 import com.dedekorkut.hotelbackend.service.RoomService;
 import com.dedekorkut.hotelbackend.specification.RoomFilter;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +23,24 @@ public class RoomController {
     }
 
     @GetMapping(path = "/filter")
-    public List<RoomDto> getAvailableRooms(@RequestBody RoomFilter filter) {
+    public Page<RoomDto> getAvailableRooms(@RequestParam(name = "page", defaultValue = "0") int page,
+                                           @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                           @RequestBody RoomFilter filter) {
 
-        return roomService.findAll(filter);
+        return roomService.findAll(page, limit, filter);
+    }
+
+    @GetMapping
+    public Page<RoomDto> getAllRooms(@RequestParam(name = "page", defaultValue = "0") int page,
+                                     @RequestParam(name = "limit", defaultValue = "10") int limit){
+        return roomService.findAll(page, limit);
     }
 
     @GetMapping("/hotel/{hotelId}")
-    public ResponseEntity<List<RoomDto>> findAllByHotelId(@PathVariable Long hotelId) {
-        List<RoomDto> rooms = roomService.findAllByHotelId(hotelId);
+    public ResponseEntity<Page<RoomDto>> findAllByHotelId(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                          @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                                          @PathVariable Long hotelId) {
+        Page<RoomDto> rooms = roomService.findAllByHotelId(page, limit, hotelId);
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 

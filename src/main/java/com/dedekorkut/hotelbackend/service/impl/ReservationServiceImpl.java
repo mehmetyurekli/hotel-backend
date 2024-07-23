@@ -74,8 +74,8 @@ public class ReservationServiceImpl implements ReservationService {
                 newReservationDto.getStart() == null || newReservationDto.getEnd() == null) {
             throw new WillfulException("Missing a field from (roomId, userId, start, end)");
         }
-        LocalDate start = newReservationDto.getStart();
-        LocalDate end = newReservationDto.getEnd();
+        LocalDate start = LocalDate.parse(newReservationDto.getStart());
+        LocalDate end = LocalDate.parse(newReservationDto.getEnd());
 
         Optional<UserDto> userDto = userService.findById(newReservationDto.getUserId());
         Optional<RoomDto> roomDto = roomService.findById(newReservationDto.getRoomId());

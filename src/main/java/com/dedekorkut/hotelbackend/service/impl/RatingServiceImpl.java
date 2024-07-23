@@ -6,6 +6,7 @@ import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.entity.Rating;
+import com.dedekorkut.hotelbackend.entity.Room;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
 import com.dedekorkut.hotelbackend.mapper.RatingMapper;
 import com.dedekorkut.hotelbackend.mapper.UserMapper;
@@ -14,6 +15,11 @@ import com.dedekorkut.hotelbackend.service.HotelService;
 import com.dedekorkut.hotelbackend.service.RatingService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
 import com.dedekorkut.hotelbackend.service.UserService;
+import com.dedekorkut.hotelbackend.specification.RoomSpecs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,32 +42,27 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<RatingDto> findAll() {
-        return ratingRepository.findAll()
-                .stream().map(RatingMapper::map)
-                .collect(Collectors.toList());
+    public Page<RatingDto> findAll(int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Page<Rating> pages = ratingRepository.findAll(pageable);
+
+        return pages.map(RatingMapper::map);
     }
 
     @Override
-    public List<RatingDto> findAllByUserId(long userId) {
-        if (userService.findById(userId).isEmpty()) {
-            throw new WillfulException("User not found");
-        }
-        return ratingRepository.findAllByUserId(userId)
-                .stream()
-                .map(RatingMapper::map)
-                .collect(Collectors.toList());
+    public Page<RatingDto> findAllByUserId(int page, int limit, long userId) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Page<Rating> pages = ratingRepository.findAllByUserId(userId, pageable);
+
+        return pages.map(RatingMapper::map);
     }
 
     @Override
-    public List<RatingDto> findAllByHotelId(long hotelId) {
-        if (hotelService.findById(hotelId).isEmpty()) {
-            throw new WillfulException("Hotel not found");
-        }
-        return ratingRepository.findAllByHotelId(hotelId)
-                .stream()
-                .map(RatingMapper::map)
-                .collect(Collectors.toList());
+    public Page<RatingDto> findAllByHotelId(int page, int limit, long hotelId) {
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Page<Rating> pages = ratingRepository.findAllByHotelId(hotelId, pageable);
+
+        return pages.map(RatingMapper::map);
     }
 
     @Override

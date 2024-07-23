@@ -1,6 +1,8 @@
 package com.dedekorkut.hotelbackend.repository;
 
 import com.dedekorkut.hotelbackend.entity.Rating;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,9 +14,9 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
 
     Optional<Rating> findRatingByHotelIdAndUserId(Long hotelId, Long userId);
 
-    List<Rating> findAllByUserId(Long userId);
+    Page<Rating> findAllByUserId(Long userId, Pageable pageable);
 
-    List<Rating> findAllByHotelId(Long hotelId);
+    Page<Rating> findAllByHotelId(Long hotelId, Pageable pageable);
 
     @Query("SELECT avg(r.rating) from Rating r where r.hotel.id = :hotelId")
     Double avgRatingByHotelId(@Param("hotelId") Long hotelId);

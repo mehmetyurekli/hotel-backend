@@ -2,17 +2,18 @@ package com.dedekorkut.hotelbackend.service;
 
 import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface RatingService {
 
-    List<RatingDto> findAll();
+    Page<RatingDto> findAll(int page, int limit);
 
-    List<RatingDto> findAllByUserId(long userId);
+    Page<RatingDto> findAllByUserId(int page, int limit, long userId);
 
-    List<RatingDto> findAllByHotelId(long hotelId);
+    Page<RatingDto> findAllByHotelId(int page, int limit, long hotelId);
 
     Optional<RatingDto> getRatingById(long id);
 

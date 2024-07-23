@@ -3,14 +3,16 @@ package com.dedekorkut.hotelbackend.service;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
 import com.dedekorkut.hotelbackend.specification.RoomFilter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface RoomService {
-    List<RoomDto> findAll(RoomFilter filter);
+    Page<RoomDto> findAll(int page, int limit, RoomFilter filter);
+    Page<RoomDto> findAll(int page, int limit);
 
-    List<RoomDto> findAllByHotelId(Long hotelId);
+    Page<RoomDto> findAllByHotelId(int page, int limit, Long hotelId);
 
     Optional<RoomDto> findById(long id);
 

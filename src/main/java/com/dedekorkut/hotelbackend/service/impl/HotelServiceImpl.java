@@ -3,9 +3,15 @@ package com.dedekorkut.hotelbackend.service.impl;
 import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.entity.Hotel;
+import com.dedekorkut.hotelbackend.entity.Room;
 import com.dedekorkut.hotelbackend.mapper.HotelMapper;
 import com.dedekorkut.hotelbackend.repository.HotelRepository;
 import com.dedekorkut.hotelbackend.service.HotelService;
+import com.dedekorkut.hotelbackend.specification.RoomSpecs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,31 +28,18 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<HotelDto> findAll() {
-        return hotelRepository.findAll()
-                .stream()
-                .map(hotel -> {
-                    return HotelMapper.map(hotel);
-                })
-                .collect(Collectors.toList());
-    }
+    public Page<HotelDto> findAll(int page, int limit) {
 
-    @Override
-    public List<HotelDto> findAllByCity(String city) {
-        return hotelRepository.findByCity(city)
-                .stream()
-                .map(hotel -> {
-                    return HotelMapper.map(hotel);
-                })
-                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Page<Hotel> pages = hotelRepository.findAll(pageable);
+
+        return pages.map(HotelMapper::map);
     }
 
     @Override
     public Optional<HotelDto> findById(long id) {
         return hotelRepository.findById(id)
-                .map(hotel -> {
-                    return HotelMapper.map(hotel);
-                });
+                .map(HotelMapper::map);
     }
 
     @Override

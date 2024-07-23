@@ -15,7 +15,7 @@ public class NewReservationDto {
 
     private Long userId;
     private Long roomId;
-    private LocalDate start;
-    private LocalDate end;
+    private String start;
+    private String end;
 
 }

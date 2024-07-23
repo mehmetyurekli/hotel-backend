@@ -2,6 +2,7 @@ package com.dedekorkut.hotelbackend.controller;
 
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.service.HotelService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,9 @@ public class HotelController {
     }
 
     @GetMapping
-    public List<HotelDto> getAllHotels() {
-        return hotelService.findAll();
+    public Page<HotelDto> getAllHotels(@RequestParam(name = "page", defaultValue = "0") int page,
+                                       @RequestParam(name = "limit", defaultValue = "10") int limit) {
+        return hotelService.findAll(page, limit);
     }
 
     @GetMapping("/{id}")

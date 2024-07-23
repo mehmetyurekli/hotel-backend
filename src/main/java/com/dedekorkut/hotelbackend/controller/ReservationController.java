@@ -20,7 +20,9 @@ public class ReservationController {
     }
 
     @GetMapping(path = "/user/{userId}")
-    public List<ReservationDto> getReservations(@PathVariable Long userId) {
+    public List<ReservationDto> getReservations(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                                @PathVariable Long userId) {
         return reservationService.findAllByUserId(userId);
     }
 
