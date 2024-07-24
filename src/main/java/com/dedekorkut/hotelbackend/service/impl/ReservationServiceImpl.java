@@ -5,7 +5,6 @@ import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
 import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
-import com.dedekorkut.hotelbackend.entity.Hotel;
 import com.dedekorkut.hotelbackend.entity.Reservation;
 import com.dedekorkut.hotelbackend.mapper.ReservationMapper;
 import com.dedekorkut.hotelbackend.mapper.RoomMapper;
@@ -117,7 +116,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void cancelReservation(long reservationId) {
-        Optional<ReservationDto> reservation = findByReservationId(reservationId);
         reservationRepository.deleteById(reservationId);
     }
 
