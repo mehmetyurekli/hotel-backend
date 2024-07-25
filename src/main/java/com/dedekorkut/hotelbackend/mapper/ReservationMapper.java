@@ -16,11 +16,11 @@ public class ReservationMapper {
 
     }
 
-    public static Reservation map(ReservationDto reservation) {
+    public static Reservation convertToEntity(ReservationDto reservation) {
         return Reservation.builder()
                 .id(reservation.getId())
-                .user(UserMapper.map(reservation.getUser()))
-                .room(RoomMapper.map(reservation.getRoom()))
+                .user(UserMapper.convertToEntity(reservation.getUser()))
+                .room(RoomMapper.convertToEntity(reservation.getRoom()))
                 .date(reservation.getDate())
                 .createdAt(reservation.getCreatedAt())
                 .build();

@@ -102,8 +102,8 @@ public class ReservationServiceImpl implements ReservationService {
             assert roomDto != null;
             assert userDto != null;
             Reservation reservation = Reservation.builder()
-                    .user(UserMapper.map(userDto))
-                    .room(RoomMapper.map(roomDto))
+                    .user(UserMapper.convertToEntity(userDto))
+                    .room(RoomMapper.convertToEntity(roomDto))
                     .date(date)
                     .createdAt(LocalDate.now())
                     .build();

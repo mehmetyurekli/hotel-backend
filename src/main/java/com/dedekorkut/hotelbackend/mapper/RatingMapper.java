@@ -14,12 +14,12 @@ public class RatingMapper {
                 .build();
     }
 
-    public static Rating map(RatingDto entity) {
+    public static Rating convertToEntity(RatingDto dto) {
         return Rating.builder()
-                .id(entity.getId())
-                .hotel(HotelMapper.map(entity.getHotel()))
-                .user(UserMapper.map(entity.getUser()))
-                .rating(entity.getRating())
+                .id(dto.getId())
+                .hotel(HotelMapper.convertToEntity(dto.getHotel()))
+                .user(UserMapper.convertToEntity(dto.getUser()))
+                .rating(dto.getRating())
                 .build();
     }
 }

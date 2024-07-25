@@ -92,8 +92,8 @@ public class PSServiceImpl implements PackageServiceService {
         for (ServiceDto serviceDto : services) {
             assert packageDto != null;
             PackageService packageService = PackageService.builder()
-                    .aPackage(PackageMapper.map(packageDto))
-                    .service(ServiceMapper.map(serviceDto))
+                    .aPackage(PackageMapper.convertToEntity(packageDto))
+                    .service(ServiceMapper.convertToEntity(serviceDto))
                     .build();
             saved.add(packageServiceRepository.save(packageService));
         }

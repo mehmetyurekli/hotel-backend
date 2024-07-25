@@ -2,7 +2,6 @@ package com.dedekorkut.hotelbackend.service.impl;
 
 import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.PackageDto;
-import com.dedekorkut.hotelbackend.entity.Hotel;
 import com.dedekorkut.hotelbackend.entity.Package;
 import com.dedekorkut.hotelbackend.mapper.PackageMapper;
 import com.dedekorkut.hotelbackend.repository.PackageRepository;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PackageServiceImpl implements PackageService {

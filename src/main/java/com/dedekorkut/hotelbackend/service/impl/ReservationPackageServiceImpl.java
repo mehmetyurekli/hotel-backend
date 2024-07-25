@@ -74,8 +74,8 @@ public class ReservationPackageServiceImpl implements ReservationPackageService 
         for (ReservationDto reservationDto : reservationDtos) {
             assert packageDto != null;
             ReservationPackage reservationPackage = ReservationPackage.builder()
-                    .reservation(ReservationMapper.map(reservationDto))
-                    .aPackage(PackageMapper.map(packageDto))
+                    .reservation(ReservationMapper.convertToEntity(reservationDto))
+                    .aPackage(PackageMapper.convertToEntity(packageDto))
                     .build();
             reservationPackages.add(reservationPackage);
         }

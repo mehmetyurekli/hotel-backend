@@ -54,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         assert hotel != null;
-        Page<Room> pages = roomRepository.findAllByHotel(HotelMapper.map(hotel), pageable);
+        Page<Room> pages = roomRepository.findAllByHotel(HotelMapper.convertToEntity(hotel), pageable);
         return pages.map(RoomMapper::map);
     }
 
@@ -93,7 +93,7 @@ public class RoomServiceImpl implements RoomService {
                 .build();
 
         assert hotel != null;
-        room.setHotel(HotelMapper.map(hotel));
+        room.setHotel(HotelMapper.convertToEntity(hotel));
 
         room = roomRepository.save(room);
         return ResponseEntity.status(HttpStatus.CREATED).body(RoomMapper.map(room));

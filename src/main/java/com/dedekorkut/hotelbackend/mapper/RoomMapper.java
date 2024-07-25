@@ -30,11 +30,11 @@ public class RoomMapper {
 
     }
 
-    public static Room map(RoomDto dto) {
+    public static Room convertToEntity(RoomDto dto) {
         return Room.builder()
                 .id(dto.getId())
                 .internalId(dto.getInternalId())
-                .hotel(HotelMapper.map(dto.getHotel()))
+                .hotel(HotelMapper.convertToEntity(dto.getHotel()))
                 .name(dto.getName())
                 .beds(dto.getBeds())
                 .capacity(dto.getCapacity())

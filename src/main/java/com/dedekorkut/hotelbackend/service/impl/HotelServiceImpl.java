@@ -56,7 +56,7 @@ public class HotelServiceImpl implements HotelService {
                 dto.getCity() == null) {
             throw new WillfulException("Missing a field from (name, address, city)");
         }
-        Hotel saved = HotelMapper.map(dto);
+        Hotel saved = HotelMapper.convertToEntity(dto);
         saved = hotelRepository.save(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(HotelMapper.map(saved));
     }

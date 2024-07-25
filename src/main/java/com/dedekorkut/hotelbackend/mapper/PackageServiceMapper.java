@@ -14,12 +14,12 @@ public class PackageServiceMapper {
                 .build();
     }
 
-    public static PackageService map(PackageServiceDto packageService) {
+    public static PackageService convertToEntity(PackageServiceDto packageService) {
 
         return PackageService.builder()
                 .id(packageService.getId())
-                .aPackage(PackageMapper.map(packageService.getPackageDto()))
-                .service(ServiceMapper.map(packageService.getServiceDto()))
+                .aPackage(PackageMapper.convertToEntity(packageService.getPackageDto()))
+                .service(ServiceMapper.convertToEntity(packageService.getServiceDto()))
                 .build();
     }
 

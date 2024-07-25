@@ -3,7 +3,6 @@ package com.dedekorkut.hotelbackend.service.impl;
 import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
-import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.entity.Rating;
@@ -103,8 +102,8 @@ public class RatingServiceImpl implements RatingService {
             existingOrNewRating = ratingRepository.save(existingOrNewRating);
         } else {
             existingOrNewRating = Rating.builder()
-                    .hotel(HotelMapper.map(hotel))
-                    .user(UserMapper.map(user))
+                    .hotel(HotelMapper.convertToEntity(hotel))
+                    .user(UserMapper.convertToEntity(user))
                     .rating(newRatingDto.getRating())
                     .build();
 

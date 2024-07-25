@@ -14,12 +14,12 @@ public class ReservationPackageMapper {
                 .build();
     }
 
-    public static ReservationPackage map(ReservationPackageDto reservationPackage) {
+    public static ReservationPackage convertToEntity(ReservationPackageDto reservationPackage) {
 
         return ReservationPackage.builder()
                 .id(reservationPackage.getId())
-                .reservation(ReservationMapper.map(reservationPackage.getReservation()))
-                .aPackage(PackageMapper.map(reservationPackage.getAPackage()))
+                .reservation(ReservationMapper.convertToEntity(reservationPackage.getReservation()))
+                .aPackage(PackageMapper.convertToEntity(reservationPackage.getAPackage()))
                 .build();
     }
 }

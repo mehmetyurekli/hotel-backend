@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
                 user.getEmail() == null || user.getRole() == null) {
             throw new WillfulException("Missing a field from (firstName, lastName, email, role)");
         }
-        User saved = UserMapper.map(user);
+        User saved = UserMapper.convertToEntity(user);
         saved = userRepository.save(saved);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.map(saved));
     }

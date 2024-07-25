@@ -16,7 +16,7 @@ public class HotelMapper {
 
     }
 
-    public static Hotel map(HotelDto dto) {
+    public static Hotel convertToEntity(HotelDto dto) {
         return Hotel.builder()
                 .id(dto.getId())
                 .name(dto.getName())

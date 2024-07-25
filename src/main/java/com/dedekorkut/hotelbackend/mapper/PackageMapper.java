@@ -12,7 +12,7 @@ public class PackageMapper {
                 .build();
     }
 
-    public static Package map(PackageDto aPackage) {
+    public static Package convertToEntity(PackageDto aPackage) {
         return Package.builder()
                 .id(aPackage.getId())
                 .name(aPackage.getName())

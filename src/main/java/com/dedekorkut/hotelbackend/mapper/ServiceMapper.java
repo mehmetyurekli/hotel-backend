@@ -12,7 +12,7 @@ public class ServiceMapper {
                 .build();
     }
 
-    public static Service map(ServiceDto service) {
+    public static Service convertToEntity(ServiceDto service) {
         return Service.builder()
                 .id(service.getId())
                 .name(service.getName())
