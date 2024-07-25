@@ -26,24 +26,16 @@ public class ReservationPackageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationPackageDto> getReservationPackageById(@PathVariable Long id) {
-        if (reservationPackageService.getReservationPackageById(id).isPresent()) {
-            return ResponseEntity.ok(reservationPackageService.getReservationPackageById(id).get());
-        }
-        return ResponseEntity.notFound().build();
+        return reservationPackageService.getReservationPackageById(id);
     }
 
     @PostMapping
     public ResponseEntity<List<ReservationPackageDto>> createReservationPackage(@RequestBody NewReservationPackageDto newReservationPackageDto) {
-        List<ReservationPackageDto> dtos = reservationPackageService.createReservationPackage(newReservationPackageDto);
-        return ResponseEntity.ok(dtos);
+        return reservationPackageService.createReservationPackage(newReservationPackageDto);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteReservationPackageById(@PathVariable("id") Long id) {
-        if (reservationPackageService.getReservationPackageById(id).isPresent()) {
-            reservationPackageService.deleteReservationPackageById(id);
-            return HttpStatus.NO_CONTENT;
-        }
-        return HttpStatus.NOT_FOUND;
+        return reservationPackageService.deleteReservationPackageById(id);
     }
 }

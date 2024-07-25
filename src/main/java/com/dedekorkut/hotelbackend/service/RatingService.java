@@ -3,21 +3,21 @@ package com.dedekorkut.hotelbackend.service;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import org.springframework.data.domain.Page;
-
-import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public interface RatingService {
 
     Page<RatingDto> findAll(int page, int size);
 
-    Page<RatingDto> findAllByUserId(int page, int size, long userId);
+    Page<RatingDto> findAllByUserId(int page, int size, Long userId);
 
-    Page<RatingDto> findAllByHotelId(int page, int size, long hotelId);
+    Page<RatingDto> findAllByHotelId(int page, int size, Long hotelId);
 
-    Optional<RatingDto> getRatingById(long id);
+    ResponseEntity<RatingDto> getRatingById(Long id);
 
-    RatingDto addRating(NewRatingDto newRatingDto);
+    ResponseEntity<RatingDto> addRating(NewRatingDto newRatingDto);
 
-    void deleteRatingById(long id);
+    HttpStatus deleteRatingById(Long id);
 
 }

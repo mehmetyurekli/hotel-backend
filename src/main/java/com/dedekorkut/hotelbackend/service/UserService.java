@@ -1,16 +1,17 @@
 package com.dedekorkut.hotelbackend.service;
 
 import com.dedekorkut.hotelbackend.dto.UserDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
     List<UserDto> findAll();
 
-    Optional<UserDto> findById(long id);
+    ResponseEntity<UserDto> findById(Long id);
 
-    UserDto save(UserDto user);
+    ResponseEntity<UserDto> save(UserDto user);
 
-    void deleteById(long id);
+    HttpStatus deleteById(Long id);
 }

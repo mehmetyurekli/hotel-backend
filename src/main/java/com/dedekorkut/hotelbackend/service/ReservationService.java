@@ -3,6 +3,8 @@ package com.dedekorkut.hotelbackend.service;
 import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.input.NewReservationDto;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,17 +12,16 @@ import java.util.Optional;
 
 public interface ReservationService {
 
-    Page<ReservationDto> findAllByUserId(int page, int size, long userId);
+    Page<ReservationDto> findAllByUserId(int page, int size, Long userId);
 
-    List<ReservationDto> getStays(long hotelId, long userId);
+    List<ReservationDto> getStays(Long hotelId, Long userId);
 
-    Optional<ReservationDto> findByReservationId(long reservationId);
+    ResponseEntity<ReservationDto> findByReservationId(Long reservationId);
 
-    List<ReservationDto> save(NewReservationDto newReservationDto);
+    ResponseEntity<List<ReservationDto>> save(NewReservationDto newReservationDto);
 
-    void cancelReservation(long reservationId);
+    HttpStatus cancelReservation(Long reservationId);
 
-    void cancelReservation(long... reservationIds);
+    HttpStatus cancelReservation(Long... reservationIds);
 
-    boolean isAvailable(LocalDate date, Long roomId);
 }

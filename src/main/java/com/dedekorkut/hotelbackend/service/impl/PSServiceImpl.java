@@ -12,6 +12,8 @@ import com.dedekorkut.hotelbackend.mapper.ServiceMapper;
 import com.dedekorkut.hotelbackend.repository.PackageServiceRepository;
 import com.dedekorkut.hotelbackend.service.PackageServiceService;
 import com.dedekorkut.hotelbackend.service.ServiceService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,59 +43,69 @@ public class PSServiceImpl implements PackageServiceService {
     }
 
     @Override
-    public Optional<PackageServiceDto> findById(Long id) {
-        return packageServiceRepository.findById(id).map(PackageServiceMapper::map);
+    public ResponseEntity<PackageServiceDto> findById(Long id) {
+        if(id == null){
+            throw new WillfulException("PackageService id is null");
+        }
+
+        Optional<PackageService> optional = packageServiceRepository.findById(id);
+
+        if(optional.isEmpty()){
+            throw new WillfulException("PackageService not found (id: " + id + ")");
+        }
+
+        PackageServiceDto packageServiceDto = PackageServiceMapper.map(optional.get());
+
+        return ResponseEntity.ok(packageServiceDto);
     }
 
     @Override
     public List<ServiceDto> findServicesIncludedInPackage(Long packageId) {
-        if (packageService.getPackageById(packageId).isEmpty()) {
-            throw new WillfulException("Package not found");
-        }
+
+        packageService.getPackageById(packageId);
+
         List<Long> serviceIds = packageServiceRepository.findServicesIncludedInPackage(packageId);
         List<ServiceDto> serviceDtos = new ArrayList<>();
         for (Long serviceId : serviceIds) {
-            serviceDtos.add(serviceService.getServiceById(serviceId).get());
+            serviceDtos.add(serviceService.getServiceById(serviceId).getBody());
         }
         return serviceDtos;
     }
 
     @Override
-    public List<PackageServiceDto> save(NewPackageServiceDto newPackageServiceDto) {
+    public ResponseEntity<List<PackageServiceDto>> save(NewPackageServiceDto newPackageServiceDto) {
 
         if (newPackageServiceDto.getServiceId() == null || newPackageServiceDto.getPackageId() == null) {
             throw new WillfulException("Missing a field from (service_id, package_id)");
         }
 
-        Optional<PackageDto> packageDto = packageService.getPackageById(newPackageServiceDto.getPackageId());
+        PackageDto packageDto = packageService.getPackageById(newPackageServiceDto.getPackageId()).getBody();
 
         List<ServiceDto> services = new ArrayList<>();
 
         for (Long serviceId : newPackageServiceDto.getServiceId()) {
-            Optional<ServiceDto> serviceDto = serviceService.getServiceById(serviceId);
-            if (serviceDto.isEmpty()) {
-                throw new WillfulException("Service not found");
-            }
-            services.add(serviceDto.get());
-        }
-
-        if (packageDto.isEmpty()) {
-            throw new WillfulException("Package not found");
+            ServiceDto serviceDto = serviceService.getServiceById(serviceId).getBody();
+            services.add(serviceDto);
         }
 
         List<PackageService> saved = new ArrayList<>();
         for (ServiceDto serviceDto : services) {
+            assert packageDto != null;
             PackageService packageService = PackageService.builder()
-                    .aPackage(PackageMapper.map(packageDto.get()))
+                    .aPackage(PackageMapper.map(packageDto))
                     .service(ServiceMapper.map(serviceDto))
                     .build();
             saved.add(packageServiceRepository.save(packageService));
         }
-        return saved.stream().map(PackageServiceMapper::map).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(saved.stream().map(PackageServiceMapper::map).collect(Collectors.toList()));
     }
 
     @Override
-    public void deleteById(Long id) {
+    public HttpStatus deleteById(Long id) {
+        findById(id);
+
         packageServiceRepository.deleteById(id);
+        return HttpStatus.NO_CONTENT;
     }
 }

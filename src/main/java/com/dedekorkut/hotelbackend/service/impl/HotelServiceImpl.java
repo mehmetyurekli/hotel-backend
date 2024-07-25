@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,24 +35,37 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public Optional<HotelDto> findById(long id) {
-        return hotelRepository.findById(id)
-                .map(HotelMapper::map);
+    public ResponseEntity<HotelDto> findById(Long id) {
+
+        if(id == null){
+            throw new WillfulException("Hotel id is null");
+        }
+        Optional<Hotel> optionalHotel = hotelRepository.findById(id);
+        if(optionalHotel.isEmpty()){
+            throw new WillfulException("Hotel not found (id: " + id + ")");
+        }
+
+        HotelDto hotelDto = HotelMapper.map(optionalHotel.get());
+
+        return ResponseEntity.ok(hotelDto);
     }
 
     @Override
-    public HotelDto save(HotelDto dto) {
+    public ResponseEntity<HotelDto> save(HotelDto dto) {
         if (dto.getName() == null || dto.getAddress() == null ||
                 dto.getCity() == null) {
             throw new WillfulException("Missing a field from (name, address, city)");
         }
-        Hotel entity = HotelMapper.map(dto);
-        entity = hotelRepository.save(entity);
-        return HotelMapper.map(entity);
+        Hotel saved = HotelMapper.map(dto);
+        saved = hotelRepository.save(saved);
+        return ResponseEntity.status(HttpStatus.CREATED).body(HotelMapper.map(saved));
     }
 
     @Override
-    public void deleteById(long id) {
+    public HttpStatus deleteById(Long id) {
+        findById(id);
+
         hotelRepository.deleteById(id);
+        return HttpStatus.NO_CONTENT;
     }
 }

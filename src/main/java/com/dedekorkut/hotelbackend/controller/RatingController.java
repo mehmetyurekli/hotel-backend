@@ -27,37 +27,29 @@ public class RatingController {
     @GetMapping("/hotel/{hotelId}")
     public Page<RatingDto> getRatingsByHotel(@RequestParam(name = "page", defaultValue = "0") int page,
                                              @RequestParam(name = "size", defaultValue = "10") int size,
-                                             @PathVariable long hotelId) {
+                                             @PathVariable Long hotelId) {
         return ratingService.findAllByHotelId(page, size, hotelId);
     }
 
     @GetMapping("/user/{userId}")
     public Page<RatingDto> getRatingsByUserId(@RequestParam(name = "page", defaultValue = "0") int page,
                                               @RequestParam(name = "size", defaultValue = "10") int size,
-                                              @PathVariable long userId) {
+                                              @PathVariable Long userId) {
         return ratingService.findAllByUserId(page, size, userId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RatingDto> getRatingById(@PathVariable long id) {
-        if (ratingService.getRatingById(id).isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(ratingService.getRatingById(id).get(), HttpStatus.OK);
+    public ResponseEntity<RatingDto> getRatingById(@PathVariable Long id) {
+        return ratingService.getRatingById(id);
     }
 
     @PostMapping("/new")
     public ResponseEntity<RatingDto> createRating(@RequestBody NewRatingDto newRatingDto) {
-        RatingDto dto = ratingService.addRating(newRatingDto);
-        return ResponseEntity.ok().body(dto);
+        return ratingService.addRating(newRatingDto);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteRatingById(@PathVariable long id) {
-        if (ratingService.getRatingById(id).isEmpty()) {
-            return HttpStatus.NOT_FOUND;
-        }
-        ratingService.deleteRatingById(id);
-        return HttpStatus.NO_CONTENT;
+        return ratingService.deleteRatingById(id);
     }
 }

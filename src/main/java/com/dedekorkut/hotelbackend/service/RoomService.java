@@ -4,8 +4,8 @@ import com.dedekorkut.hotelbackend.dto.RoomDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRoomDto;
 import com.dedekorkut.hotelbackend.specification.RoomFilter;
 import org.springframework.data.domain.Page;
-
-import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public interface RoomService {
     Page<RoomDto> findAll(int page, int size, RoomFilter filter);
@@ -14,9 +14,9 @@ public interface RoomService {
 
     Page<RoomDto> findAllByHotelId(int page, int size, Long hotelId);
 
-    Optional<RoomDto> findById(long id);
+    ResponseEntity<RoomDto> findById(Long id);
 
-    RoomDto save(NewRoomDto newRoomDto, long hotelId);
+    ResponseEntity<RoomDto> save(NewRoomDto newRoomDto, Long hotelId);
 
-    void deleteById(long id);
+    HttpStatus deleteById(Long id);
 }

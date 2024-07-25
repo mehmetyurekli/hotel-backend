@@ -2,6 +2,7 @@ package com.dedekorkut.hotelbackend.controller;
 
 import com.dedekorkut.hotelbackend.dto.PackageDto;
 import com.dedekorkut.hotelbackend.service.PackageService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,30 +20,24 @@ public class PackageController {
     }
 
     @GetMapping
-    public List<PackageDto> getAllPackages() {
-        return packageService.getAllPackages();
+    public Page<PackageDto> getAllPackages(@RequestParam(name = "page", defaultValue = "0") int page,
+                                           @RequestParam(name = "size", defaultValue = "10") int size) {
+        return packageService.getAllPackages(page, size);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PackageDto> getPackageById(@PathVariable("id") long id) {
-        if (packageService.getPackageById(id).isPresent()) {
-            return new ResponseEntity<>(packageService.getPackageById(id).get(), HttpStatus.OK);
-        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    public PackageDto createPackage(@RequestParam String name) {
+    public ResponseEntity<PackageDto> createPackage(@RequestParam String name) {
         return packageService.createPackage(name);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deletePackageById(@PathVariable("id") long id) {
-        if (packageService.getPackageById(id).isPresent()) {
-            packageService.deletePackage(id);
-            return HttpStatus.OK;
-        }
-        return HttpStatus.NOT_FOUND;
+        return packageService.deletePackage(id);
     }
 
 }

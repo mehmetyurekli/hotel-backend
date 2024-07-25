@@ -25,28 +25,16 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        if (userService.findById(id).isPresent()) {
-            return new ResponseEntity<>(userService.findById(id).get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return userService.findById(id);
     }
 
     @PostMapping("/new")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        if (userDto.getFirstName() == null || userDto.getLastName() == null ||
-                userDto.getEmail() == null || userDto.getRole() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        UserDto saved = userService.save(userDto);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        return userService.save(userDto);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteUser(@PathVariable Long id) {
-        if (userService.findById(id).isPresent()) {
-            userService.deleteById(id);
-            return HttpStatus.NO_CONTENT;
-        }
-        return HttpStatus.NOT_FOUND;
+        return userService.deleteById(id);
     }
 }

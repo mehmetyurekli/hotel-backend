@@ -25,23 +25,16 @@ public class ServiceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ServiceDto> getServiceById(@PathVariable("id") Long id) {
-        if (serviceService.getServiceById(id).isPresent()) {
-            return new ResponseEntity<>(serviceService.getServiceById(id).get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return serviceService.getServiceById(id);
     }
 
     @PostMapping
-    public ServiceDto createService(@RequestParam String name) {
+    public ResponseEntity<ServiceDto> createService(@RequestParam String name) {
         return serviceService.createService(name);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteService(@PathVariable("id") Long id) {
-        if (serviceService.getServiceById(id).isPresent()) {
-            serviceService.deleteServiceById(id);
-            return HttpStatus.NO_CONTENT;
-        }
-        return HttpStatus.NOT_FOUND;
+        return serviceService.deleteServiceById(id);
     }
 }

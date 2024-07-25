@@ -29,14 +29,12 @@ public class ReservationController {
 
     @PostMapping("/new")
     public ResponseEntity<List<ReservationDto>> createReservation(@RequestBody NewReservationDto newReservationDto) {
-        List<ReservationDto> list = reservationService.save(newReservationDto);
-        return new ResponseEntity<>(list, HttpStatus.CREATED);
+        return reservationService.save(newReservationDto);
     }
 
     @DeleteMapping(path = "/cancel")
-    public HttpStatus cancelReservation(@RequestParam long... reservationIds) {
-        reservationService.cancelReservation(reservationIds);
-        return HttpStatus.NO_CONTENT;
+    public HttpStatus cancelReservation(@RequestParam Long... reservationIds) {
+        return reservationService.cancelReservation(reservationIds);
     }
 
 }

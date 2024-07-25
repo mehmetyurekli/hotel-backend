@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -48,32 +50,40 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Page<RoomDto> findAllByHotelId(int page, int size, Long hotelId) {
-        Optional<HotelDto> hotel = hotelService.findById(hotelId);
-        if (hotelService.findById(hotelId).isEmpty()) {
-            throw new WillfulException("Hotel not found");
-        }
+        HotelDto hotel = hotelService.findById(hotelId).getBody();
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Room> pages = roomRepository.findAllByHotel(HotelMapper.map(hotel.get()), pageable);
+        assert hotel != null;
+        Page<Room> pages = roomRepository.findAllByHotel(HotelMapper.map(hotel), pageable);
         return pages.map(RoomMapper::map);
     }
 
     @Override
-    public Optional<RoomDto> findById(long id) {
-        return roomRepository.findById(id).map(RoomMapper::map);
+    public ResponseEntity<RoomDto> findById(Long id) {
+        if(id == null){
+            throw new WillfulException("Room id is null");
+        }
+
+        Optional<Room> room = roomRepository.findById(id);
+
+        if(room.isEmpty()){
+            throw new WillfulException("Room not found (id: " + id + ")");
+        }
+
+        RoomDto roomDto = RoomMapper.map(room.get());
+
+        return ResponseEntity.ok(roomDto);
     }
 
     @Override
-    public RoomDto save(NewRoomDto newRoomDto, long hotelId) {
+    public ResponseEntity<RoomDto> save(NewRoomDto newRoomDto, Long hotelId) {
 
         if (newRoomDto.getCapacity() < 1 || newRoomDto.getBeds() < 1 || newRoomDto.getName() == null ||
                 newRoomDto.getPrice() == null) {
             throw new WillfulException("Missing a field from (beds, capacity, name)");
         }
 
-        Optional<HotelDto> hotel = hotelService.findById(hotelId);
-        if (hotelService.findById(hotelId).isEmpty()) {
-            throw new WillfulException("Hotel not found");
-        }
+        HotelDto hotel = hotelService.findById(hotelId).getBody();
 
         Room room = Room.builder()
                 .name(newRoomDto.getName())
@@ -82,14 +92,18 @@ public class RoomServiceImpl implements RoomService {
                 .price(newRoomDto.getPrice())
                 .build();
 
-        room.setHotel(HotelMapper.map(hotel.get()));
+        assert hotel != null;
+        room.setHotel(HotelMapper.map(hotel));
 
         room = roomRepository.save(room);
-        return RoomMapper.map(room);
+        return ResponseEntity.status(HttpStatus.CREATED).body(RoomMapper.map(room));
     }
 
     @Override
-    public void deleteById(long id) {
+    public HttpStatus deleteById(Long id) {
+        findById(id);
+
         roomRepository.deleteById(id);
+        return HttpStatus.NO_CONTENT;
     }
 }

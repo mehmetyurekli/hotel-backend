@@ -27,10 +27,7 @@ public class PackageServiceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PackageServiceDto> getPackageServiceById(@PathVariable("id") Long id) {
-        if (packageServiceService.findById(id).isPresent()) {
-            return new ResponseEntity<>(packageServiceService.findById(id).get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return packageServiceService.findById(id);
     }
 
     @GetMapping("/package/{packageId}")
@@ -39,16 +36,12 @@ public class PackageServiceController {
     }
 
     @PostMapping
-    public List<PackageServiceDto> createPackageService(@RequestBody NewPackageServiceDto newPackageServiceDto) {
+    public ResponseEntity<List<PackageServiceDto>> createPackageService(@RequestBody NewPackageServiceDto newPackageServiceDto) {
         return packageServiceService.save(newPackageServiceDto);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deletePackageServiceById(@PathVariable("id") Long id) {
-        if (packageServiceService.findById(id).isPresent()) {
-            packageServiceService.deleteById(id);
-            return HttpStatus.NO_CONTENT;
-        }
-        return HttpStatus.NOT_FOUND;
+        return packageServiceService.deleteById(id);
     }
 }

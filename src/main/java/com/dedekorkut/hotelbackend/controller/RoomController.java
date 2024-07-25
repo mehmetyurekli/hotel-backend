@@ -36,39 +36,24 @@ public class RoomController {
     }
 
     @GetMapping("/hotel/{hotelId}")
-    public ResponseEntity<Page<RoomDto>> findAllByHotelId(@RequestParam(name = "page", defaultValue = "0") int page,
+    public Page<RoomDto> findAllByHotelId(@RequestParam(name = "page", defaultValue = "0") int page,
                                                           @RequestParam(name = "size", defaultValue = "10") int size,
                                                           @PathVariable Long hotelId) {
-        Page<RoomDto> rooms = roomService.findAllByHotelId(page, size, hotelId);
-        return new ResponseEntity<>(rooms, HttpStatus.OK);
+        return roomService.findAllByHotelId(page, size, hotelId);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RoomDto> findById(@PathVariable Long id) {
-        Optional<RoomDto> roomDto = roomService.findById(id);
-        if (roomDto.isPresent()) {
-            return new ResponseEntity<>(roomDto.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return roomService.findById(id);
     }
 
     @PostMapping("/new/hotel/{hotelId}")
     public ResponseEntity<RoomDto> createRoom(@RequestBody NewRoomDto newRoomDto, @PathVariable Long hotelId) {
-
-        RoomDto saved = roomService.save(newRoomDto, hotelId);
-
-        if (saved == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        return roomService.save(newRoomDto, hotelId);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteRoom(@PathVariable Long id) {
-        if (roomService.findById(id).isEmpty()) {
-            return HttpStatus.NOT_FOUND;
-        }
-        roomService.deleteById(id);
-        return HttpStatus.NO_CONTENT;
+        return roomService.deleteById(id);
     }
 }

@@ -1,6 +1,8 @@
 package com.dedekorkut.hotelbackend.service;
 
 import com.dedekorkut.hotelbackend.dto.ServiceDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,10 +11,10 @@ public interface ServiceService {
 
     List<ServiceDto> getAllServices();
 
-    Optional<ServiceDto> getServiceById(long id);
+    ResponseEntity<ServiceDto> getServiceById(Long id);
 
-    ServiceDto createService(String name);
+    ResponseEntity<ServiceDto> createService(String name);
 
-    void deleteServiceById(long id);
+    HttpStatus deleteServiceById(Long id);
 
 }

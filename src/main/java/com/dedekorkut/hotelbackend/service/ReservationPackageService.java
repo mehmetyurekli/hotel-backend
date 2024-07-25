@@ -2,17 +2,18 @@ package com.dedekorkut.hotelbackend.service;
 
 import com.dedekorkut.hotelbackend.dto.ReservationPackageDto;
 import com.dedekorkut.hotelbackend.dto.input.NewReservationPackageDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReservationPackageService {
 
     List<ReservationPackageDto> getAllReservationPackages();
 
-    Optional<ReservationPackageDto> getReservationPackageById(long id);
+    ResponseEntity<ReservationPackageDto> getReservationPackageById(Long id);
 
-    List<ReservationPackageDto> createReservationPackage(NewReservationPackageDto newReservationPackageDto);
+    ResponseEntity<List<ReservationPackageDto>> createReservationPackage(NewReservationPackageDto newReservationPackageDto);
 
-    void deleteReservationPackageById(long id);
+    HttpStatus deleteReservationPackageById(Long id);
 }

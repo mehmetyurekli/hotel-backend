@@ -1,17 +1,19 @@
 package com.dedekorkut.hotelbackend.service;
 
 import com.dedekorkut.hotelbackend.dto.PackageDto;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface PackageService {
 
-    List<PackageDto> getAllPackages();
+    Page<PackageDto> getAllPackages(int page, int size);
 
-    Optional<PackageDto> getPackageById(long id);
+    ResponseEntity<PackageDto> getPackageById(Long id);
 
-    PackageDto createPackage(String name);
+    ResponseEntity<PackageDto> createPackage(String name);
 
-    void deletePackage(long id);
+    HttpStatus deletePackage(Long id);
 }

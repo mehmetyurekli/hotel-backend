@@ -13,6 +13,8 @@ import com.dedekorkut.hotelbackend.repository.ReservationPackageRepository;
 import com.dedekorkut.hotelbackend.service.PackageService;
 import com.dedekorkut.hotelbackend.service.ReservationPackageService;
 import com.dedekorkut.hotelbackend.service.ReservationService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -42,42 +44,52 @@ public class ReservationPackageServiceImpl implements ReservationPackageService 
     }
 
     @Override
-    public Optional<ReservationPackageDto> getReservationPackageById(long id) {
-        return reservationPackageRepository.findById(id).map(ReservationPackageMapper::map);
+    public ResponseEntity<ReservationPackageDto> getReservationPackageById(Long id) {
+        if (id == null){
+            throw new WillfulException("ReservationPackage id is null");
+        }
+        Optional<ReservationPackage> reservationPackage = reservationPackageRepository.findById(id);
+
+        if (reservationPackage.isEmpty()){
+            throw new WillfulException("ReservationPackage not found");
+        }
+
+        ReservationPackageDto reservationPackageDto = ReservationPackageMapper.map(reservationPackage.get());
+
+        return ResponseEntity.ok(reservationPackageDto);
     }
 
     @Override
-    public List<ReservationPackageDto> createReservationPackage(NewReservationPackageDto newReservationPackageDto) {
+    public ResponseEntity<List<ReservationPackageDto>> createReservationPackage(NewReservationPackageDto newReservationPackageDto) {
 
         List<ReservationDto> reservationDtos = new ArrayList<>();
         for (Long reservationId : newReservationPackageDto.getReservationIds()) {
-            Optional<ReservationDto> reservationDto = reservationService.findByReservationId(reservationId);
-            if (reservationDto.isEmpty()) {
-                throw new WillfulException("Reservation with id " + reservationId + " not found");
-            }
-            reservationDtos.add(reservationDto.get());
+            ReservationDto reservationDto = reservationService.findByReservationId(reservationId).getBody();
+            reservationDtos.add(reservationDto);
         }
 
-        Optional<PackageDto> packageDto = packageService.getPackageById(newReservationPackageDto.getPackageId());
-
-        if (packageDto.isEmpty()) {
-            throw new WillfulException("Package not found");
-        }
+        PackageDto packageDto = packageService.getPackageById(newReservationPackageDto.getPackageId()).getBody();
 
         List<ReservationPackage> reservationPackages = new ArrayList<>();
         for (ReservationDto reservationDto : reservationDtos) {
+            assert packageDto != null;
             ReservationPackage reservationPackage = ReservationPackage.builder()
                     .reservation(ReservationMapper.map(reservationDto))
-                    .aPackage(PackageMapper.map(packageDto.get()))
+                    .aPackage(PackageMapper.map(packageDto))
                     .build();
             reservationPackages.add(reservationPackage);
         }
 
-        return reservationPackages.stream().map(ReservationPackageMapper::map).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                reservationPackages.stream().map(ReservationPackageMapper::map).collect(Collectors.toList())
+        );
     }
 
     @Override
-    public void deleteReservationPackageById(long id) {
+    public HttpStatus deleteReservationPackageById(Long id) {
+        getReservationPackageById(id);
+
         reservationPackageRepository.deleteById(id);
+        return HttpStatus.NO_CONTENT;
     }
 }

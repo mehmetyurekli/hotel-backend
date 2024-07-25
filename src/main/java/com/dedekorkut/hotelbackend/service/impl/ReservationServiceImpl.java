@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,10 +44,9 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Page<ReservationDto> findAllByUserId(int page, int size, long userId) {
-        if (userService.findById(userId).isEmpty()) {
-            throw new WillfulException("User not found");
-        }
+    public Page<ReservationDto> findAllByUserId(int page, int size, Long userId) {
+
+        userService.findById(userId).getBody();
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Reservation> pages = reservationRepository.findAllByUserId(userId, pageable);
@@ -54,53 +55,55 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDto> getStays(long hotelId, long userId) {
-        if (userService.findById(userId).isEmpty()) {
-            throw new WillfulException("User not found");
-        }
-        if (hotelService.findById(hotelId).isEmpty()) {
-            throw new WillfulException("Hotel not found");
-        }
+    public List<ReservationDto> getStays(Long hotelId, Long userId) {
+        userService.findById(userId);
+        hotelService.findById(hotelId);
+
         return reservationRepository.findAllByUser_IdAndRoom_Hotel_Id(userId, hotelId)
                 .stream()
                 .map(ReservationMapper::map)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
-    public Optional<ReservationDto> findByReservationId(long reservationId) {
-        return reservationRepository.findById(reservationId).map(ReservationMapper::map);
+    public ResponseEntity<ReservationDto> findByReservationId(Long reservationId) {
+        if(reservationId == null){
+            throw new WillfulException("ReservationId is null");
+        }
+
+        Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
+
+        if(optionalReservation.isEmpty()){
+            throw new WillfulException("Reservation not found (id: " + reservationId + ")");
+        }
+        ReservationDto reservationDto = ReservationMapper.map(optionalReservation.get());
+        return ResponseEntity.ok(reservationDto);
     }
 
     @Override
-    public List<ReservationDto> save(NewReservationDto newReservationDto) {
+    public ResponseEntity<List<ReservationDto>> save(NewReservationDto newReservationDto) {
 
         if (newReservationDto.getRoomId() == null || newReservationDto.getUserId() == null ||
                 newReservationDto.getStart() == null || newReservationDto.getEnd() == null) {
             throw new WillfulException("Missing a field from (roomId, userId, start, end)");
         }
+
         LocalDate start = LocalDate.parse(newReservationDto.getStart());
         LocalDate end = LocalDate.parse(newReservationDto.getEnd());
 
-        Optional<UserDto> userDto = userService.findById(newReservationDto.getUserId());
-        Optional<RoomDto> roomDto = roomService.findById(newReservationDto.getRoomId());
-
-        if (userDto.isEmpty() || roomDto.isEmpty()) {
-            throw new WillfulException("Room or user not found");
-        }
-
-        if (!start.isBefore(end) && !start.isEqual(end)) {
-            throw new WillfulException("Invalid reservation dates");
-        }
+        UserDto userDto = userService.findById(newReservationDto.getUserId()).getBody();
+        RoomDto roomDto = roomService.findById(newReservationDto.getRoomId()).getBody();
 
         List<Reservation> reservations = new ArrayList<>();
         for (LocalDate date = start; date.isBefore(end) || date.isEqual(end); date = date.plusDays(1)) {
             if (!isAvailable(date, newReservationDto.getRoomId())) {
                 throw new WillfulException("Room not available on given date interval");
             }
+            assert roomDto != null;
+            assert userDto != null;
             Reservation reservation = Reservation.builder()
-                    .user(UserMapper.map(userDto.get()))
-                    .room(RoomMapper.map(roomDto.get()))
+                    .user(UserMapper.map(userDto))
+                    .room(RoomMapper.map(roomDto))
                     .date(date)
                     .createdAt(LocalDate.now())
                     .build();
@@ -108,26 +111,34 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         reservationRepository.saveAll(reservations);
-        return reservations.stream()
-                .map(ReservationMapper::map)
-                .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                reservations.stream()
+                        .map(ReservationMapper::map)
+                        .collect(Collectors.toList())
+        );
 
     }
 
     @Override
-    public void cancelReservation(long reservationId) {
+    public HttpStatus cancelReservation(Long reservationId) {
+        findByReservationId(reservationId);
+
         reservationRepository.deleteById(reservationId);
+        return HttpStatus.NO_CONTENT;
     }
 
     @Override
-    public void cancelReservation(long... reservationIds) {
+    public HttpStatus cancelReservation(Long... reservationIds) {
         for (long reservationId : reservationIds) {
+            findByReservationId(reservationId);
+        }
+        for (Long reservationId : reservationIds) {
             cancelReservation(reservationId);
         }
+        return HttpStatus.NO_CONTENT;
     }
 
-    @Override
-    public boolean isAvailable(LocalDate date, Long roomId) {
+    private boolean isAvailable(LocalDate date, Long roomId) {
         return reservationRepository.findByDateAndRoomId(date, roomId) == null;
     }
 }

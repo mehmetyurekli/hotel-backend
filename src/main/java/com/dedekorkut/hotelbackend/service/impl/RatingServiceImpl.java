@@ -3,6 +3,7 @@ package com.dedekorkut.hotelbackend.service.impl;
 import com.dedekorkut.hotelbackend.common.WillfulException;
 import com.dedekorkut.hotelbackend.dto.HotelDto;
 import com.dedekorkut.hotelbackend.dto.RatingDto;
+import com.dedekorkut.hotelbackend.dto.ReservationDto;
 import com.dedekorkut.hotelbackend.dto.UserDto;
 import com.dedekorkut.hotelbackend.dto.input.NewRatingDto;
 import com.dedekorkut.hotelbackend.entity.Rating;
@@ -18,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -46,7 +49,8 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Page<RatingDto> findAllByUserId(int page, int size, long userId) {
+    public Page<RatingDto> findAllByUserId(int page, int size, Long userId) {
+        userService.findById(userId);
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Rating> pages = ratingRepository.findAllByUserId(userId, pageable);
 
@@ -54,7 +58,8 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Page<RatingDto> findAllByHotelId(int page, int size, long hotelId) {
+    public Page<RatingDto> findAllByHotelId(int page, int size, Long hotelId) {
+        hotelService.findById(hotelId);
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Rating> pages = ratingRepository.findAllByHotelId(hotelId, pageable);
 
@@ -62,18 +67,27 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Optional<RatingDto> getRatingById(long id) {
-        return ratingRepository.findById(id).map(RatingMapper::map);
+    public ResponseEntity<RatingDto> getRatingById(Long id) {
+        if(id == null){
+            throw new WillfulException("Rating id is null");
+        }
+        Optional<Rating> optionalRating = ratingRepository.findById(id);
+
+        if (optionalRating.isEmpty()){
+            throw new WillfulException("Rating not found (id: " + id + ")");
+        }
+        RatingDto ratingDto = RatingMapper.map(optionalRating.get());
+        return ResponseEntity.ok(ratingDto);
     }
 
     @Override
-    public RatingDto addRating(NewRatingDto newRatingDto) {
-        Optional<UserDto> user = userService.findById(newRatingDto.getUserId());
-        Optional<HotelDto> hotel = hotelService.findById(newRatingDto.getHotelId());
+    public ResponseEntity<RatingDto> addRating(NewRatingDto newRatingDto) {
+        UserDto user = userService.findById(newRatingDto.getUserId()).getBody();
+        HotelDto hotel = hotelService.findById(newRatingDto.getHotelId()).getBody();
 
-        if (hotel.isEmpty() || user.isEmpty()) {
-            throw new WillfulException("Hotel or User not found.");
-        }
+        assert user != null;
+        assert hotel != null;
+
         if (reservationService.getStays(newRatingDto.getHotelId(), newRatingDto.getUserId()).isEmpty()) {
             throw new WillfulException("No reservation found."); //no reservation, cant review hotel
         }
@@ -89,8 +103,8 @@ public class RatingServiceImpl implements RatingService {
             existingOrNewRating = ratingRepository.save(existingOrNewRating);
         } else {
             existingOrNewRating = Rating.builder()
-                    .hotel(HotelMapper.map(hotel.get()))
-                    .user(UserMapper.map(user.get()))
+                    .hotel(HotelMapper.map(hotel))
+                    .user(UserMapper.map(user))
                     .rating(newRatingDto.getRating())
                     .build();
 
@@ -98,18 +112,19 @@ public class RatingServiceImpl implements RatingService {
         }
 
         //update the hotel's rating field
-        hotel.get().setRating(ratingRepository.avgRatingByHotelId(newRatingDto.getHotelId()));
-        hotelService.save(hotel.get());
-        return RatingMapper.map(existingOrNewRating);
+        hotel.setRating(ratingRepository.avgRatingByHotelId(newRatingDto.getHotelId()));
+        hotelService.save(hotel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(RatingMapper.map(existingOrNewRating));
     }
 
     @Override
-    public void deleteRatingById(long id) {
-        if (getRatingById(id).isPresent()) {
-            HotelDto hotelDto = getRatingById(id).get().getHotel();
-            hotelDto.setRating(ratingRepository.avgRatingByHotelId(hotelDto.getId()));
-            hotelService.save(hotelDto);
-        }
+    public HttpStatus deleteRatingById(Long id) {
+        RatingDto rating = getRatingById(id).getBody();
+        assert rating != null;
+        HotelDto hotel = rating.getHotel();
+        hotel.setRating(ratingRepository.avgRatingByHotelId(rating.getHotel().getId()));
+        hotelService.save(hotel);
         ratingRepository.deleteById(id);
+        return HttpStatus.NO_CONTENT;
     }
 }

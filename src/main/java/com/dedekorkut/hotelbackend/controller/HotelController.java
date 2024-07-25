@@ -25,23 +25,16 @@ public class HotelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HotelDto> getHotelById(@PathVariable Long id) {
-        if (hotelService.findById(id).isPresent()) {
-            return new ResponseEntity<>(hotelService.findById(id).get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return hotelService.findById(id);
     }
 
     @PostMapping("/new")
     public ResponseEntity<HotelDto> createHotel(@RequestBody HotelDto hotelDto) {
-        return new ResponseEntity<>(hotelService.save(hotelDto), HttpStatus.CREATED);
+        return hotelService.save(hotelDto);
     }
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteHotel(@PathVariable Long id) {
-        if (hotelService.findById(id).isPresent()) {
-            hotelService.deleteById(id);
-            return HttpStatus.NO_CONTENT;
-        }
-        return HttpStatus.NOT_FOUND;
+        return hotelService.deleteById(id);
     }
 }
