@@ -19,8 +19,8 @@ public class HotelController {
 
     @GetMapping
     public Page<HotelDto> getAllHotels(@RequestParam(name = "page", defaultValue = "0") int page,
-                                       @RequestParam(name = "limit", defaultValue = "10") int limit) {
-        return hotelService.findAll(page, limit);
+                                       @RequestParam(name = "size", defaultValue = "10") int size) {
+        return hotelService.findAll(page, size);
     }
 
     @GetMapping("/{id}")

@@ -24,9 +24,9 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public Page<HotelDto> findAll(int page, int limit) {
+    public Page<HotelDto> findAll(int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Hotel> pages = hotelRepository.findAll(pageable);
 
         return pages.map(HotelMapper::map);

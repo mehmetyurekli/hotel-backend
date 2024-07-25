@@ -22,9 +22,9 @@ public class ReservationController {
 
     @GetMapping(path = "/user/{userId}")
     public Page<ReservationDto> getReservations(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                                @RequestParam(name = "size", defaultValue = "10") int size,
                                                 @PathVariable Long userId) {
-        return reservationService.findAllByUserId(page, limit, userId);
+        return reservationService.findAllByUserId(page, size, userId);
     }
 
     @PostMapping("/new")

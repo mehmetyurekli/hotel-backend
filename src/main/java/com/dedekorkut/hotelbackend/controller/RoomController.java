@@ -23,23 +23,23 @@ public class RoomController {
 
     @GetMapping(path = "/filter")
     public Page<RoomDto> getAvailableRooms(@RequestParam(name = "page", defaultValue = "0") int page,
-                                           @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                           @RequestParam(name = "size", defaultValue = "10") int size,
                                            @RequestBody RoomFilter filter) {
 
-        return roomService.findAll(page, limit, filter);
+        return roomService.findAll(page, size, filter);
     }
 
     @GetMapping
     public Page<RoomDto> getAllRooms(@RequestParam(name = "page", defaultValue = "0") int page,
-                                     @RequestParam(name = "limit", defaultValue = "10") int limit) {
-        return roomService.findAll(page, limit);
+                                     @RequestParam(name = "size", defaultValue = "10") int size) {
+        return roomService.findAll(page, size);
     }
 
     @GetMapping("/hotel/{hotelId}")
     public ResponseEntity<Page<RoomDto>> findAllByHotelId(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                          @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                                          @RequestParam(name = "size", defaultValue = "10") int size,
                                                           @PathVariable Long hotelId) {
-        Page<RoomDto> rooms = roomService.findAllByHotelId(page, limit, hotelId);
+        Page<RoomDto> rooms = roomService.findAllByHotelId(page, size, hotelId);
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 

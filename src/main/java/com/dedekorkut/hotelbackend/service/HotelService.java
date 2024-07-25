@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface HotelService {
-    Page<HotelDto> findAll(int page, int limit);
+    Page<HotelDto> findAll(int page, int size);
 
     Optional<HotelDto> findById(long id);
 

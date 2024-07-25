@@ -38,24 +38,24 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Page<RatingDto> findAll(int page, int limit) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+    public Page<RatingDto> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Rating> pages = ratingRepository.findAll(pageable);
 
         return pages.map(RatingMapper::map);
     }
 
     @Override
-    public Page<RatingDto> findAllByUserId(int page, int limit, long userId) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+    public Page<RatingDto> findAllByUserId(int page, int size, long userId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Rating> pages = ratingRepository.findAllByUserId(userId, pageable);
 
         return pages.map(RatingMapper::map);
     }
 
     @Override
-    public Page<RatingDto> findAllByHotelId(int page, int limit, long hotelId) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+    public Page<RatingDto> findAllByHotelId(int page, int size, long hotelId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Rating> pages = ratingRepository.findAllByHotelId(hotelId, pageable);
 
         return pages.map(RatingMapper::map);

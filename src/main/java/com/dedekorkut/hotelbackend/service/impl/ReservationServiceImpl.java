@@ -42,13 +42,13 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Page<ReservationDto> findAllByUserId(int page, int limit, long userId) {
+    public Page<ReservationDto> findAllByUserId(int page, int size, long userId) {
         if (userService.findById(userId).isEmpty()) {
             throw new WillfulException("User not found");
         }
 
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
-        Page<Reservation> pages = reservationRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Reservation> pages = reservationRepository.findAllByUserId(userId, pageable);
 
         return pages.map(ReservationMapper::map);
     }

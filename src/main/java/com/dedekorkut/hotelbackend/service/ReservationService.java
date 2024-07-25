@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ReservationService {
 
-    Page<ReservationDto> findAllByUserId(int page, int limit, long userId);
+    Page<ReservationDto> findAllByUserId(int page, int size, long userId);
 
     List<ReservationDto> getStays(long hotelId, long userId);
 

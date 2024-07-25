@@ -8,11 +8,11 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface RoomService {
-    Page<RoomDto> findAll(int page, int limit, RoomFilter filter);
+    Page<RoomDto> findAll(int page, int size, RoomFilter filter);
 
-    Page<RoomDto> findAll(int page, int limit);
+    Page<RoomDto> findAll(int page, int size);
 
-    Page<RoomDto> findAllByHotelId(int page, int limit, Long hotelId);
+    Page<RoomDto> findAllByHotelId(int page, int size, Long hotelId);
 
     Optional<RoomDto> findById(long id);
 

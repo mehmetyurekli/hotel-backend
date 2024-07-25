@@ -32,27 +32,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Page<RoomDto> findAll(int page, int limit, RoomFilter filter) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+    public Page<RoomDto> findAll(int page, int size, RoomFilter filter) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Room> pages = roomRepository.findAll(RoomSpecs.filter(filter), pageable);
 
         return pages.map(RoomMapper::map);
     }
 
     @Override
-    public Page<RoomDto> findAll(int page, int limit) {
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+    public Page<RoomDto> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Room> pages = roomRepository.findAll(pageable);
         return pages.map(RoomMapper::map);
     }
 
     @Override
-    public Page<RoomDto> findAllByHotelId(int page, int limit, Long hotelId) {
+    public Page<RoomDto> findAllByHotelId(int page, int size, Long hotelId) {
         Optional<HotelDto> hotel = hotelService.findById(hotelId);
         if (hotelService.findById(hotelId).isEmpty()) {
             throw new WillfulException("Hotel not found");
         }
-        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Room> pages = roomRepository.findAllByHotel(HotelMapper.map(hotel.get()), pageable);
         return pages.map(RoomMapper::map);
     }

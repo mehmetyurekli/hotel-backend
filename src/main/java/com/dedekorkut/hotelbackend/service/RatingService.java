@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface RatingService {
 
-    Page<RatingDto> findAll(int page, int limit);
+    Page<RatingDto> findAll(int page, int size);
 
-    Page<RatingDto> findAllByUserId(int page, int limit, long userId);
+    Page<RatingDto> findAllByUserId(int page, int size, long userId);
 
-    Page<RatingDto> findAllByHotelId(int page, int limit, long hotelId);
+    Page<RatingDto> findAllByHotelId(int page, int size, long hotelId);
 
     Optional<RatingDto> getRatingById(long id);
 

@@ -70,6 +70,7 @@ public class ReservationPackageServiceImpl implements ReservationPackageService 
                     .reservation(ReservationMapper.map(reservationDto))
                     .aPackage(PackageMapper.map(packageDto.get()))
                     .build();
+            reservationPackages.add(reservationPackage);
         }
 
         return reservationPackages.stream().map(ReservationPackageMapper::map).collect(Collectors.toList());

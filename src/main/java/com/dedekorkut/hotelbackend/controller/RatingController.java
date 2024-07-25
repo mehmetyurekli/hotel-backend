@@ -20,22 +20,22 @@ public class RatingController {
 
     @GetMapping
     public Page<RatingDto> getRatings(@RequestParam(name = "page", defaultValue = "0") int page,
-                                      @RequestParam(name = "limit", defaultValue = "10") int limit) {
-        return ratingService.findAll(page, limit);
+                                      @RequestParam(name = "size", defaultValue = "10") int size) {
+        return ratingService.findAll(page, size);
     }
 
     @GetMapping("/hotel/{hotelId}")
     public Page<RatingDto> getRatingsByHotel(@RequestParam(name = "page", defaultValue = "0") int page,
-                                             @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                             @RequestParam(name = "size", defaultValue = "10") int size,
                                              @PathVariable long hotelId) {
-        return ratingService.findAllByHotelId(page, limit, hotelId);
+        return ratingService.findAllByHotelId(page, size, hotelId);
     }
 
     @GetMapping("/user/{userId}")
     public Page<RatingDto> getRatingsByUserId(@RequestParam(name = "page", defaultValue = "0") int page,
-                                              @RequestParam(name = "limit", defaultValue = "10") int limit,
+                                              @RequestParam(name = "size", defaultValue = "10") int size,
                                               @PathVariable long userId) {
-        return ratingService.findAllByUserId(page, limit, userId);
+        return ratingService.findAllByUserId(page, size, userId);
     }
 
     @GetMapping("/{id}")
