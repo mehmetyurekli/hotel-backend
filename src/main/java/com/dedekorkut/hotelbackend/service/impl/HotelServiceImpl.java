@@ -53,7 +53,7 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseEntity<HotelDto> save(HotelDto dto) {
         if (dto.getName() == null || dto.getAddress() == null ||
-                dto.getCity() == null) {
+                dto.getCity() == null || dto.getName().isEmpty() || dto.getAddress().isEmpty() || dto.getCity().isEmpty()) {
             throw new WillfulException("Missing a field from (name, address, city)");
         }
         Hotel saved = HotelMapper.convertToEntity(dto);

@@ -21,7 +21,8 @@ public class RoomSpecs {
             List<Predicate> predicates = new ArrayList<>();
 
             //selecting reservations between given date
-            if (filter.getStartDate() != null && filter.getEndDate() != null) {
+            if (filter.getStartDate() != null && filter.getEndDate() != null
+            && !filter.getStartDate().isEmpty() && !filter.getEndDate().isEmpty()) {
                 LocalDate start = LocalDate.parse(filter.getStartDate());
                 LocalDate end = LocalDate.parse(filter.getEndDate());
                 if (start.isBefore(end) || start.isEqual(end)) {
@@ -38,7 +39,8 @@ public class RoomSpecs {
             }
 
             if (filter.getHotelName() != null && !filter.getHotelName().isEmpty()) {
-                predicates.add(builder.equal(root.get("hotelName"), filter.getHotelName()));
+                Join<Room, Hotel> hotelJoin = root.join("hotel");
+                predicates.add(builder.equal(hotelJoin.get("name"), filter.getHotelName()));
             }
 
             if (filter.getBeds() != null && filter.getBeds() > 0) {
